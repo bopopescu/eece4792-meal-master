@@ -1,0 +1,7 @@
+{
+    "azure": {
+        "key": "955a8ee27fab47eab18b79a6f8f45a32",
+        "endpoint": "https://teamw4-image-processing.cognitiveservices.azure.com/vision/v2.0/",
+        "text recognition": "read/core/asyncBatchAnalyze"
+    }
+}
