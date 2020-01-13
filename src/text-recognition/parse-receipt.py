@@ -2,23 +2,12 @@ import json
 import os
 import requests
 import time
+from PIL import Image
 
 def get_azure_settings():
     return json.loads(open('settings.json', 'r').read())['azure']
 
-def process_from_url(url):
-    # Get Azure settings
-    key = get_azure_settings()['key']
-    endpoint = os.path.join(get_azure_settings()['endpoint'], get_azure_settings()['text recognition']) 
-
-    # Setup API request
-    headers = {'Ocp-Apim-Subscription-Key': key}
-    data = {'url': url}
-    
-    # Make request
-    response = requests.post(endpoint, headers=headers, json=data)
-    response.raise_for_status()
-
+def process_image_response(headers, response):
     # Process the response
     analysis = {}
 
@@ -38,6 +27,35 @@ def process_from_url(url):
 
     return analysis
 
+
+def request_from_local(path):
+    # Get Azure settings
+    key = get_azure_settings()['key']
+    endpoint = os.path.join(get_azure_settings()['endpoint'], get_azure_settings()['text recognition'])
+
+    # Setup API request
+    headers = {'Ocp-Apim-Subscription-Key': key, 'Content-Type': 'application/octet-stream'}
+    data = open(path, "rb").read()
+
+    # Make request
+    response = requests.post(endpoint, headers=headers, data=data)
+    response.raise_for_status()
+    return process_image_response(headers, response)
+
+def request_from_url(url):
+    # Get Azure settings
+    key = get_azure_settings()['key']
+    endpoint = os.path.join(get_azure_settings()['endpoint'], get_azure_settings()['text recognition'])
+
+    # Setup API request
+    headers = {'Ocp-Apim-Subscription-Key': key}
+    data = {'url': url}
+
+    # Make request
+    response = requests.post(endpoint, headers=headers, json=data)
+    response.raise_for_status()
+    return process_image_response(headers, response)
+
 def parse_foods(recognition_results):
     lines = []
 
@@ -49,6 +67,4 @@ def parse_foods(recognition_results):
 
 if __name__ == "__main__":
     print("Text:")
-    print(parse_foods(process_from_url('https://i0.wp.com/clark.com/wp-content/uploads/2018/10/receipt.jpg')))
-    print("\nJSON:")
-    print(process_from_url('https://i0.wp.com/clark.com/wp-content/uploads/2018/10/receipt.jpg'))
+    print(parse_foods(request_from_local('trader-joes.jpg')))
