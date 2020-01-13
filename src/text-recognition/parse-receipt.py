@@ -68,3 +68,4 @@ def parse_foods(recognition_results):
 if __name__ == "__main__":
     print("Text:")
     print(parse_foods(request_from_local('trader-joes.jpg')))
+    input("Press Enter to continue...")
