@@ -3,6 +3,7 @@ import os
 import requests
 import time
 from PIL import Image
+import pprint
 
 def get_azure_settings():
     return json.loads(open('settings.json', 'r').read())['azure']
@@ -68,4 +69,6 @@ def parse_foods(recognition_results):
 if __name__ == "__main__":
     print("Text:")
     print(parse_foods(request_from_local('trader-joes.jpg')))
+    print("JSON")
+    pprint.pprint(request_from_local('trader-joes.jpg'))
     input("Press Enter to continue...")
