@@ -1,5 +1,6 @@
 package com.app.eece4792mealmaster.services;
 
+import com.app.eece4792mealmaster.constants.Consts;
 import com.app.eece4792mealmaster.models.User;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.ApiResponse;
@@ -24,12 +25,12 @@ public class UserService {
     if (user == null) {
       throw new ResourceNotFoundException();
     }
-    session.setAttribute("user", user.getId());
+    session.setAttribute(Consts.SessionConsts.USER_ID, user.getId());
     return new ApiResponse(200, "Login successful", user);
   }
 
   public ApiResponse logout(HttpSession session) {
-    if (session.getAttribute("user") == null) {
+    if (session.getAttribute(Consts.SessionConsts.USER_ID) == null) {
       throw new BadRequest();
     }
     session.invalidate();
