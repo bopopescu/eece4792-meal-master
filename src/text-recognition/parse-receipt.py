@@ -4,6 +4,7 @@ import requests
 import time
 from PIL import Image
 import pprint
+import argparse
 
 def get_azure_settings():
     return json.loads(open('settings.json', 'r').read())['azure']
@@ -64,11 +65,33 @@ def parse_foods(recognition_results):
         for line in page['lines']:
             lines.append(line['text'])
 
+    if (any("trader joe" in line.lower() for line in lines)):
+        return parse_trader_joes(lines)
+
     return lines
 
+def parse_trader_joes(lines):
+    for line in lines:
+        if ("open" in line.lower()):
+            lines = lines[lines.index(line) + 1 : -1]
+            break
+
+    for line in lines:
+        if ("subtotal" in line.lower() or "bag fee" in line.lower()):
+            lines = lines[0:lines.index(line)]
+            break
+
+    lines = list(filter(lambda x : not (x[0].isdigit() or x[0] == '@'), lines))
+
+    return lines
+
+
 if __name__ == "__main__":
-    print("Text:")
-    print(parse_foods(request_from_local('trader-joes.jpg')))
-    print("JSON")
-    pprint.pprint(request_from_local('trader-joes.jpg'))
+    parser = argparse.ArgumentParser(description="Parses the provided image")
+    parser.add_argument('--image_path', help="Path to image of receipt", required=True)
+    args = parser.parse_args()
+
+    path = args.image_path
+    print("Parsed Foods:")
+    print(parse_foods(request_from_local(path)))
     input("Press Enter to continue...")
