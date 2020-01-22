@@ -89,12 +89,7 @@ public class StockItem {
   public boolean equals(Object o) {
     if (o instanceof StockItem) {
       StockItem givenStockItem = (StockItem) o;
-      return this.id.equals(givenStockItem.id)
-          && this.expirationDate.isEqual(givenStockItem.expirationDate)
-          && this.dateObtained.isEqual(givenStockItem.dateObtained)
-          && this.location.equals(givenStockItem.location)
-          && this.quantity.equals(givenStockItem.quantity)
-          && this.foodStock.equals(givenStockItem.foodStock);
+      return this.id.equals(givenStockItem.id);
     }
     return false;
   }

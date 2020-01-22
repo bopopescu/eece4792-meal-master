@@ -60,9 +60,7 @@ public class FoodStock {
   public boolean equals(Object o) {
     if (o instanceof FoodStock) {
       FoodStock givenFoodStock = (FoodStock) o;
-      return this.id.equals(givenFoodStock.id)
-          && this.stockItems.containsAll(givenFoodStock.stockItems)
-          && givenFoodStock.stockItems.containsAll(this.stockItems);
+      return this.id.equals(givenFoodStock.id);
     }
     return false;
   }
