@@ -1,6 +1,5 @@
 package com.app.eece4792mealmaster.models;
 
-import com.app.eece4792mealmaster.models.products.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -28,9 +27,9 @@ public class Recipe {
 
     @ElementCollection
     @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
-    @MapKeyJoinColumn(name = "ndbNo")
+    @MapKeyJoinColumn(name = "generic_food_id")
     @Column(name = "servings")
-    private Map<Product, Double> ingredients = new HashMap<>();
+    private Map<GenericFood, Double> ingredients = new HashMap<>();
 
     @Column(columnDefinition = "TEXT")
     private String instructions;
@@ -70,11 +69,11 @@ public class Recipe {
         this.creator = creator;
     }
 
-    public Map<Product, Double> getIngredients() {
+    public Map<GenericFood, Double> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Map<Product, Double> ingredients) {
+    public void setIngredients(Map<GenericFood, Double> ingredients) {
         this.ingredients = ingredients;
     }
 

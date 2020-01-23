@@ -24,6 +24,7 @@ public final class Utils {
         if (source.getClass().equals(newData.getClass())) {
             Class model = source.getClass();
             String className = model.getSimpleName();
+            if (!Consts.PATCHABLE_FIELDS.containsKey(className)) { return; }
             String[] patchableFields = Consts.PATCHABLE_FIELDS.get(className);
             Method getMethod;
             Method setMethod;
