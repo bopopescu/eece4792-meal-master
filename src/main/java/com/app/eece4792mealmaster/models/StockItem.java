@@ -19,7 +19,7 @@ public class StockItem {
   private Long id;
 
   @ManyToOne
-  @MapsId("foodStockId")
+  @MapsId("foodStockid")
   private FoodStock foodStock;
 
   private String location;
@@ -28,7 +28,7 @@ public class StockItem {
 
   private LocalDate expirationDate;
 
-  private Quantity quantity;
+  private double quantity;
 
   public Long getId() {
     return id;
@@ -70,11 +70,11 @@ public class StockItem {
     this.expirationDate = expirationDate;
   }
 
-  public Quantity getQuantity() {
+  public double getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(Quantity quantity) {
+  public void setQuantity(double quantity) {
     this.quantity = quantity;
   }
 
