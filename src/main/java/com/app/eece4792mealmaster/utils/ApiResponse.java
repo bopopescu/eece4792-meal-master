@@ -1,25 +1,23 @@
 package com.app.eece4792mealmaster.utils;
 
-import org.springframework.http.HttpStatus;
-
 public class ApiResponse {
 
   private int status;
   private String message;
-  private Object result;
+  private Object body;
 
-  public ApiResponse(int status, String message, Object result) {
+  public ApiResponse(int status, String message, Object body) {
     this.status = status;
     this.message = message;
-    this.result = result;
+    this.body = body;
   }
 
   public ApiResponse(String message) {
     this(200, message, null);
   }
 
-  public ApiResponse(Object result) {
-    this(200, "Success", result);
+  public ApiResponse(Object body) {
+    this(200, "Success", body);
   }
 
   public ApiResponse() {
@@ -30,4 +28,7 @@ public class ApiResponse {
     return status;
   }
 
+  public String getMessage() { return message; }
+
+  public Object getbody() { return body; }
 }

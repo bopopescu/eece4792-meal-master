@@ -12,13 +12,13 @@ import static com.app.eece4792mealmaster.controllers.Routes.*;
 
 // TODO: Add EC2 hostname to allowed origins
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000"}, allowCredentials = "true")
+@CrossOrigin(origins = {"*","http://localhost:3000"}, allowCredentials = "true")
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @GetMapping(RECIPE_API + SEARCHTERMS)
-    public ApiResponse searchRecipes(@PathVariable(SEARCHTERMS) String searchTerms) {
+    @GetMapping(RECIPE_API + SEARCH)
+    public ApiResponse searchRecipes(@RequestParam(SEARCHTERMS) String searchTerms) {
         return recipeService.searchRecipes(searchTerms);
     }
 

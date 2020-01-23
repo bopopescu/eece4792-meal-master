@@ -1,6 +1,7 @@
 package com.app.eece4792mealmaster.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -32,10 +33,11 @@ public class User {
   @Column(unique=true, nullable=false)
   private String email;
   private LocalDate dob;
-  @JsonIgnore
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @Column(nullable=false)
   private String password;
 
+  @JsonIgnore
   @ManyToMany(fetch = FetchType.LAZY, cascade = {
           CascadeType.PERSIST,
           CascadeType.MERGE
@@ -46,9 +48,11 @@ public class User {
   )
   private Set<User> followers = new HashSet<>();
 
+  @JsonIgnore
   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followers")
   private Set<User> following = new HashSet<>();
 
+  @JsonIgnore
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
           name = "user_saved_recipes",
@@ -57,6 +61,7 @@ public class User {
   )
   private Set<Recipe> savedRecipes = new HashSet<Recipe>();
 
+  @JsonIgnore
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
   private Set<Recipe> createdRecipes;
 

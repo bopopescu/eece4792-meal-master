@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
+
 public interface UserRepository extends CrudRepository<User, Long> {
   @Query("SELECT user " +
           "FROM User user " +
@@ -19,4 +21,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
   @Query("SELECT user FROM User user WHERE user.email=:email")
   public User findUserByEmail(@Param("email") String email);
+
+  @Query("SELECT user from User user WHERE user.username LIKE :searchTerms%")
+  public Collection<User> searchUsers(@Param("searchTerms") String searchTerms);
 }
