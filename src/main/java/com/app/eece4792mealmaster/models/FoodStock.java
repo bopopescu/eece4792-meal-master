@@ -56,6 +56,7 @@ public class FoodStock {
    * @return Optional of the quantity for the desired stock item
    */
   public Optional<Double> getTotalQuantity(StockItem stockItem) {
+    // TODO update in future
 //    List<StockItem> desiredItemList = stockItems.stream()
 //        .filter(si -> si.equals(stockItem))
 //        .collect(Collectors.toList());
