@@ -6,8 +6,10 @@ final class Routes {
   private static final String API = "/api";
 
   // Path Variables
-  static final String USER_ID = "/{userId}";
-  static final String RECIPE_ID = "/{recipeId}";
+  static final String VAR_USER_ID = "/{userId}";
+  static final String VAR_RECIPE_ID = "/{recipeId}";
+  static final String USER_ID = "userId";
+  static final String RECIPE_ID = "recipeId";
 
   // User Routes
   static final String USER = "/user";

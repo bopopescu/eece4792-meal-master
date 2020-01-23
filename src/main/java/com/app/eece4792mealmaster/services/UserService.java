@@ -67,7 +67,6 @@ public class UserService {
 
   public ApiResponse deleteProfile(HttpSession session) {
     Long userId = Utils.getLoggedInUser(session);
-    System.out.println(userId);
     if (userId == null) { throw new BadRequest(); }
     Optional<User> profile = userRepository.findById(userId);
     if (profile.isPresent()) {
@@ -100,5 +99,14 @@ public class UserService {
       results = userRepository.searchUsers(searchTerms);
     }
     return new ApiResponse(results);
+  }
+
+  public ApiResponse findById(Long userId) {
+    Optional<User> oUser = userRepository.findById(userId);
+    if (oUser.isPresent()) {
+      return new ApiResponse(oUser.get());
+    } else {
+      throw new ResourceNotFoundException();
+    }
   }
 }

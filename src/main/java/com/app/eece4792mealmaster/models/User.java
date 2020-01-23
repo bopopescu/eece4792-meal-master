@@ -1,7 +1,9 @@
 package com.app.eece4792mealmaster.models;
 
+import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -24,6 +26,7 @@ public class User {
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_date")
+  @JsonView(Views.Internal.class)
   private Date createDate;
 
   private String firstName;
@@ -31,7 +34,10 @@ public class User {
   @Column(unique=true, nullable=false)
   private String username;
   @Column(unique=true, nullable=false)
+  @JsonView(Views.Internal.class)
   private String email;
+
+  @JsonView(Views.Internal.class)
   private LocalDate dob;
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @Column(nullable=false)
