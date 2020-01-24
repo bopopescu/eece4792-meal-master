@@ -1,6 +1,8 @@
 package com.app.eece4792mealmaster.models;
 
+import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -25,18 +27,23 @@ public class Recipe {
     @Column(name = "create_date")
     private Date createDate;
 
+    @JsonView(Views.Detailed.class)
     @ElementCollection
     @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
     @MapKeyJoinColumn(name = "generic_food_id")
     @Column(name = "servings")
     private Map<GenericFood, Double> ingredients = new HashMap<>();
 
+    @JsonView(Views.Detailed.class)
     @Column(columnDefinition = "TEXT")
     private String instructions;
+
     @Column(nullable = false)
     private String name;
+
     @Column(columnDefinition = "TEXT")
     private String descriptions;
+
     private Integer yield;
 
     @ManyToMany(fetch = FetchType.EAGER)

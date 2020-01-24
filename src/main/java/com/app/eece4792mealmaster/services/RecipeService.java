@@ -1,19 +1,13 @@
 package com.app.eece4792mealmaster.services;
 
-import com.app.eece4792mealmaster.constants.Consts;
 import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.models.User;
 import com.app.eece4792mealmaster.repositories.RecipeRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
-import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Utils;
-import com.app.eece4792mealmaster.utils.exceptions.BadRequest;
-import com.app.eece4792mealmaster.utils.exceptions.ForbiddenRequestException;
-import com.app.eece4792mealmaster.utils.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,62 +22,40 @@ public class RecipeService {
     @Autowired
     private UserRepository userRepository;
 
-    public ApiResponse searchRecipes(String searchTerms) {
-        Collection<Recipe> responseBody = searchTerms.equals("") ? new ArrayList<>() : recipeRepository.searchRecipes(searchTerms);
-        return new ApiResponse(responseBody);
+    public Collection<Recipe> searchRecipes(String searchTerms) {
+        return searchTerms.equals("") ? new ArrayList<>() : recipeRepository.searchRecipes(searchTerms);
     }
 
-    public ApiResponse getRecipeByUser(Long userId) {
-        if (userId == null) {
-            throw new BadRequest();
-        }
+    public Collection<Recipe> getRecipeByUser(Long userId) {
         Optional<User> oUser = userRepository.findById(userId);
-        if (!oUser.isPresent()) {
-            throw new ResourceNotFoundException();
-        }
-        return new ApiResponse(oUser.get().getCreatedRecipes());
+        return oUser.<Collection<Recipe>>map(User::getCreatedRecipes).orElse(null);
     }
 
-    public ApiResponse createRecipe(HttpSession session, Recipe recipe) {
-        Long userId = (Long)(session.getAttribute(Consts.SessionConsts.USER_ID));
-        if (userId == null || recipe == null) {
-            throw new BadRequest();
-        }
+    public Recipe createRecipe(Long userId, Recipe recipe) {
         Optional<User> oUser = userRepository.findById(userId);
         if (!oUser.isPresent()) {
-            throw new ResourceNotFoundException();
+            return null;
         }
         recipe.setCreator(oUser.get());
         recipeRepository.save(recipe);
-        return new ApiResponse(recipe);
+        return recipe;
     }
 
-    public ApiResponse updateRecipe(HttpSession session, Recipe recipeData) {
-        Long userId = (Long)(session.getAttribute(Consts.SessionConsts.USER_ID));
-        if (userId == null || recipeData == null) { throw new BadRequest(); }
-        Optional<Recipe> oRecipe = recipeRepository.findById(recipeData.getId());
-        if (!oRecipe.isPresent()) {
-            throw new ResourceNotFoundException();
-        }
-        Recipe newRecipe = oRecipe.get();
-        if (!newRecipe.getCreator().getId().equals(userId)) {
-            throw new ForbiddenRequestException();
-        }
+    public Recipe updateRecipe(Recipe recipeData) {
+        Recipe newRecipe = this.findById(recipeData.getId());
+        if (newRecipe == null) return newRecipe;
         Utils.updateModel(newRecipe, recipeData);
         recipeRepository.save(newRecipe);
-        return new ApiResponse(newRecipe);
+        return newRecipe;
     }
 
-    public ApiResponse deleteRecipe(HttpSession session, Long recipeId) {
-        Long userId = (Long)(session.getAttribute(Consts.SessionConsts.USER_ID));
-        Optional<Recipe> oRecipe = recipeRepository.findById(recipeId);
-        if (userId == null || recipeId == null || !oRecipe.isPresent()) {
-            throw new ResourceNotFoundException();
-        }
-        if (!oRecipe.get().getCreator().getId().equals(userId)) {
-            throw new ForbiddenRequestException();
-        }
-        recipeRepository.deleteById(recipeId);
-        return new ApiResponse();
+    public Recipe findById(Long recipeId) {
+        return recipeRepository.findById(recipeId).orElse(null);
+    }
+
+    public boolean deleteRecipe(Long recipeId) {
+        Optional<Recipe> toDelete = recipeRepository.findById(recipeId);
+        toDelete.ifPresent(recipe -> recipeRepository.delete(recipe));
+        return toDelete.isPresent();
     }
 }
