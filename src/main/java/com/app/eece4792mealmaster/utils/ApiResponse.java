@@ -20,6 +20,10 @@ public class ApiResponse {
     this(200, "Success", body);
   }
 
+  public ApiResponse(String message, Object body) {
+    this(200, message, body);
+  }
+
   public ApiResponse() {
     this(200, "Success", null);
   }
