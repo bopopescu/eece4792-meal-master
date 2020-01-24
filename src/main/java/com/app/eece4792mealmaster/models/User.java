@@ -1,22 +1,14 @@
 package com.app.eece4792mealmaster.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +19,12 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @CreationTimestamp
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "create_date")
+  private Date createDate;
+
   private String firstName;
   private String lastName;
   @Column(unique=true, nullable=false)
@@ -38,7 +36,7 @@ public class User {
   @Column(nullable=false)
   private String password;
 
-  @ManyToMany(cascade = {
+  @ManyToMany(fetch = FetchType.LAZY, cascade = {
           CascadeType.PERSIST,
           CascadeType.MERGE
   })
@@ -48,9 +46,19 @@ public class User {
   )
   private Set<User> followers = new HashSet<>();
 
-  @ManyToMany(mappedBy = "followers")
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followers")
   private Set<User> following = new HashSet<>();
 
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+          name = "user_saved_recipes",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "recipe_id")
+  )
+  private Set<Recipe> savedRecipes = new HashSet<Recipe>();
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+  private Set<Recipe> createdRecipes;
 
   @Transient
   public String getFullName() {
@@ -115,6 +123,14 @@ public class User {
     return following;
   }
 
+  public Set<Recipe> getCreatedRecipes() {
+    return createdRecipes;
+  }
+
+  public void setCreatedRecipes(Set<Recipe> createdRecipes) {
+    this.createdRecipes = createdRecipes;
+  }
+
   public void setFollowing(Set<User> following) {
     this.following = following;
   }
@@ -133,5 +149,21 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public Date getCreateDate() {
+    return createDate;
+  }
+
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
+  }
+
+  public Set<Recipe> getSavedRecipes() {
+    return savedRecipes;
+  }
+
+  public void setSavedRecipes(Set<Recipe> savedRecipes) {
+    this.savedRecipes = savedRecipes;
   }
 }
