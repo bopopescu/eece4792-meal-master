@@ -5,6 +5,8 @@ import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.services.RecipeService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Utils;
+import com.app.eece4792mealmaster.utils.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +23,13 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
+    @JsonView(Views.Summary.class)
     @GetMapping(RECIPE_API + SEARCH)
     public ApiResponse searchRecipes(@RequestParam(SEARCHTERMS) String searchTerms) {
         return new ApiResponse(recipeService.searchRecipes(searchTerms));
     }
 
+    @JsonView(Views.Summary.class)
     @GetMapping(USER_API + VAR_USER_ID + RECIPE)
     public ApiResponse getUserRecipes(@PathVariable(USER_ID) Long userId) {
         if (userId == null) {
@@ -34,6 +38,7 @@ public class RecipeController {
         return new ApiResponse(recipeService.getRecipeByUser(userId));
     }
 
+    @JsonView(Views.Detailed.class)
     @PostMapping(RECIPE_API)
     public ApiResponse createRecipe(HttpSession session, @RequestBody Recipe payload) {
         Long userId = Utils.getLoggedInUser(session);
@@ -50,6 +55,7 @@ public class RecipeController {
         return new ApiResponse(createdRecipe);
     }
 
+    @JsonView(Views.Detailed.class)
     @PutMapping(RECIPE_API)
     public ApiResponse updateRecipe(HttpSession session, @RequestBody Recipe recipeData) {
         Long userId = Utils.getLoggedInUser(session);
@@ -73,6 +79,7 @@ public class RecipeController {
         return new ApiResponse(updatedRecipe);
     }
 
+    @JsonView(Views.Detailed.class)
     @DeleteMapping(RECIPE_API + VAR_RECIPE_ID)
     public ApiResponse deleteRecipe(HttpSession session, @PathVariable(RECIPE_ID) Long recipeId) {
         Recipe toDelete = recipeService.findById(recipeId);
