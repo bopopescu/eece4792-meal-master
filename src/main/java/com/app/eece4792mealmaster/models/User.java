@@ -71,6 +71,9 @@ public class User {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
   private Set<Recipe> createdRecipes;
 
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+  private Set<FoodStock> foodStocks;
+
   @Transient
   public String getFullName() {
     return String.format("%s %s", this.firstName, this.lastName);
@@ -176,5 +179,13 @@ public class User {
 
   public void setSavedRecipes(Set<Recipe> savedRecipes) {
     this.savedRecipes = savedRecipes;
+  }
+
+  public Set<FoodStock> getFoodStocks() {
+    return foodStocks;
+  }
+
+  public void setFoodStocks(Set<FoodStock> foodStocks) {
+    this.foodStocks = foodStocks;
   }
 }

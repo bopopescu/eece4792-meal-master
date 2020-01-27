@@ -50,6 +50,14 @@ public class FoodStock {
     this.stockItems = stockItems;
   }
 
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
   /**
    * Retrieves the quantity of the desired stock item in this food stock
    * @param stockItem the desired stock item

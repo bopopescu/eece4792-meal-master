@@ -8,8 +8,10 @@ final class Routes {
   // Path Variables
   static final String VAR_USER_ID = "/{userId}";
   static final String VAR_RECIPE_ID = "/{recipeId}";
+  static final String VAR_STOCK_ID = "/stockId";
   static final String USER_ID = "userId";
   static final String RECIPE_ID = "recipeId";
+  static final String STOCK_ID = "stockId";
 
   // User Routes
   static final String USER = "/user";
@@ -30,4 +32,8 @@ final class Routes {
   // Query Params
   static final String SEARCH = "/search";
   static final String SEARCHTERMS = "searchTerms";
+
+  // Stock Routes
+  static final String STOCK = "/stock";
+  static final String STOCK_API = API + STOCK;
 }
