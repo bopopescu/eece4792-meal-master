@@ -43,4 +43,8 @@ public final class Utils {
             throw new IllegalArgumentException();
         }
     }
+
+    public static Long getLoggedInUser(javax.servlet.http.HttpSession session) {
+        return (Long)(session.getAttribute(Consts.SessionConsts.USER_ID));
+    }
 }
