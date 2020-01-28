@@ -5,6 +5,7 @@ import time
 from PIL import Image
 import pprint
 import argparse
+import re
 
 def get_azure_settings():
     return json.loads(open('settings.json', 'r').read())['azure']
@@ -81,9 +82,27 @@ def parse_trader_joes(lines):
             lines = lines[0:lines.index(line)]
             break
 
-    lines = list(filter(lambda x : not (x[0].isdigit() or x[0] == '@'), lines))
+    print("Unfiltered:\n", lines)
+    # lines = list(filter(lambda x : not (x[0].isdigit() or x[0] == '@'), lines))
+    price_re = re.compile("^\d+ *\. *\d\d *-?$")
+    lines = list(filter(lambda x : not (price_re.match(x) or x[0] == '@'), lines))
+    lines = list(map(lambda x : x.split('@')[0].strip() if '@' in x else x, lines))
 
-    return lines
+    foods = []
+    counter = 0
+    while (counter < len(lines)):
+        line = lines[counter]
+        next_line = lines[counter + 1] if counter < len(lines) - 1 else ""
+        quantity_re = re.compile("^\d+\w+$")
+
+        if (quantity_re.match(next_line)):
+            foods.append({"name": line, "quantity": next_line})
+            counter = counter + 2
+        else:
+            foods.append({"name": line, "quantity": ""})
+            counter = counter + 1
+
+    return foods
 
 
 if __name__ == "__main__":
@@ -92,6 +111,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     path = args.image_path
+
+
     print("Parsed Foods:")
     print(parse_foods(request_from_local(path)))
     input("Press Enter to continue...")
