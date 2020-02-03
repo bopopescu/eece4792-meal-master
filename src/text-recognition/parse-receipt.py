@@ -96,14 +96,6 @@ def parse_trader_joes(lines):
         if (quantity_re.match(next_line)):
             foods.append({"name": line, "quantity": next_line})
             counter = counter + 2
-        elif (any(food["name"] == line for food in foods)):
-            food = next((food for food in foods if food["name"] == line), None)
-            quantity = int(food["quantity"]) + 1
-
-            foods.remove(food)
-            foods.append({"name": line, "quantity": str(quantity)})
-
-            counter = counter + 1
         else:
             foods.append({"name": line, "quantity": "1"})
             counter = counter + 1
