@@ -7,7 +7,7 @@ import pprint
 import argparse
 import re
 
-RECEIPT_NON_FOODS = ["CRV", "BAG FEE", "CREW MEMBER DISCOUNT", "GROCERY NON TAXABLE"]
+RECEIPT_NON_FOODS = ["CRV", "BAG FEE", "CREW MEMBER DISCOUNT", "GROCERY NON TAXABLE", "CANVAS BAG"]
 
 def get_azure_settings():
     return json.loads(open('settings.json', 'r').read())['azure']
@@ -98,7 +98,7 @@ def parse_trader_joes(lines):
         if (quantity_re.match(next_line)):
             foods.append({"name": line, "quantity": next_line})
             counter = counter + 2
-        elif (line in RECEIPT_NON_FOODS):
+        elif (line.upper() in RECEIPT_NON_FOODS):
             if (quantity_re.match(next_line)):
                 counter = counter + 2
             else:
