@@ -82,8 +82,6 @@ def parse_trader_joes(lines):
             lines = lines[0:lines.index(line)]
             break
 
-    print("Unfiltered:\n", lines)
-    # lines = list(filter(lambda x : not (x[0].isdigit() or x[0] == '@'), lines))
     price_re = re.compile("^\d+ *\. *\d\d *-?$")
     lines = list(filter(lambda x : not (price_re.match(x) or x[0] == '@'), lines))
     lines = list(map(lambda x : x.split('@')[0].strip() if '@' in x else x, lines))
@@ -98,8 +96,16 @@ def parse_trader_joes(lines):
         if (quantity_re.match(next_line)):
             foods.append({"name": line, "quantity": next_line})
             counter = counter + 2
+        elif (any(food["name"] == line for food in foods)):
+            food = next((food for food in foods if food["name"] == line), None)
+            quantity = int(food["quantity"]) + 1
+
+            foods.remove(food)
+            foods.append({"name": line, "quantity": str(quantity)})
+
+            counter = counter + 1
         else:
-            foods.append({"name": line, "quantity": ""})
+            foods.append({"name": line, "quantity": "1"})
             counter = counter + 1
 
     return foods
@@ -111,7 +117,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     path = args.image_path
-
 
     print("Parsed Foods:")
     print(parse_foods(request_from_local(path)))
