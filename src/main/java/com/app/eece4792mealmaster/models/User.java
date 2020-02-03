@@ -68,7 +68,7 @@ public class User {
   private Set<Recipe> savedRecipes = new HashSet<Recipe>();
 
   @JsonIgnore
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator", cascade = CascadeType.ALL)
   private Set<Recipe> createdRecipes;
 
   @Transient

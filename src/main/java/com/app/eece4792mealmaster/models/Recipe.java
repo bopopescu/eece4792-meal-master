@@ -1,8 +1,7 @@
 package com.app.eece4792mealmaster.models;
 
 import com.app.eece4792mealmaster.utils.Views;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -19,7 +18,9 @@ public class Recipe {
     private Long id;
 
     @ManyToOne
-    @MapsId("userId")
+    @JoinColumn(name = "creator_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private User creator;
 
     @CreationTimestamp
@@ -28,11 +29,12 @@ public class Recipe {
     private Date createDate;
 
     @JsonView(Views.Detailed.class)
-    @ElementCollection
-    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
-    @MapKeyJoinColumn(name = "generic_food_id")
-    @Column(name = "servings")
-    private Map<GenericFood, Double> ingredients = new HashMap<>();
+    @OneToMany(
+            mappedBy = "recipe",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<RecipeIngredient> ingredients = new ArrayList<>();
 
     @JsonView(Views.Detailed.class)
     @Column(columnDefinition = "TEXT")
@@ -58,6 +60,12 @@ public class Recipe {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "savedRecipes")
     private Set<User> savedByUsers = new HashSet<>();
 
+    public void addIngredient(GenericFood ingredient, Double servings) {
+        RecipeIngredient recipeIngredient = new RecipeIngredient(this, ingredient);
+        recipeIngredient.setServings(servings);
+        this.ingredients.add(recipeIngredient);
+    }
+
     // Getters and Setters
 
     public Long getId() {
@@ -76,11 +84,11 @@ public class Recipe {
         this.creator = creator;
     }
 
-    public Map<GenericFood, Double> getIngredients() {
+    public List<RecipeIngredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Map<GenericFood, Double> ingredients) {
+    public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
     }
 
