@@ -28,7 +28,9 @@ public class StockItem {
 
   private LocalDate expirationDate;
 
-  private double quantity;
+  private Double quantity;
+
+  // Getters and setters
 
   public Long getId() {
     return id;
@@ -70,11 +72,11 @@ public class StockItem {
     this.expirationDate = expirationDate;
   }
 
-  public double getQuantity() {
+  public Double getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(double quantity) {
+  public void setQuantity(Double quantity) {
     this.quantity = quantity;
   }
 

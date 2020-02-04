@@ -8,10 +8,14 @@ final class Routes {
   // Path Variables
   static final String VAR_USER_ID = "/{userId}";
   static final String VAR_RECIPE_ID = "/{recipeId}";
-  static final String VAR_STOCK_ID = "/stockId";
+  static final String VAR_STOCK_ID = "/{stockId}";
+  static final String VAR_STOCK_ITEM_ID = "/{stockItemId}";
+  static final String VAR_FOOD_ID = "/{foodId}";
   static final String USER_ID = "userId";
   static final String RECIPE_ID = "recipeId";
   static final String STOCK_ID = "stockId";
+  static final String STOCK_ITEM_ID = "stockItemId";
+  static final String FOOD_ID = "foodId";
 
   // User Routes
   static final String USER = "/user";
@@ -36,4 +40,11 @@ final class Routes {
   // Stock Routes
   static final String STOCK = "/stock";
   static final String STOCK_API = API + STOCK;
+  static final String STOCK_ITEM = "stockItem";
+  static final String STOCK_ITEM_API = API + STOCK_ITEM;
+
+  // Generic Food Routes
+  static final String FOOD = "/food";
+  static final String FOOD_API = API + FOOD;
+
 }

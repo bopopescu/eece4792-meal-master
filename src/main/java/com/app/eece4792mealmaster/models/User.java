@@ -71,6 +71,7 @@ public class User {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
   private Set<Recipe> createdRecipes;
 
+  @JsonIgnore
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
   private Set<FoodStock> foodStocks;
 

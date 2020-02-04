@@ -25,14 +25,23 @@ public class FoodStock {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Transient
   @ManyToOne
   @MapsId("userId")
   private User user;
 
   @JsonIgnore
-  @OneToMany (mappedBy = "stockItems")
+  @OneToMany (mappedBy = "foodStock")
   private Set<StockItem> stockItems;
+
+  public void addStockItem(StockItem stockItem) {
+    this.stockItems.add(stockItem);
+  }
+
+  public void removeStockItem(StockItem stockItem) {
+    this.stockItems.remove(stockItem);
+  }
+
+  // Getters and setters
 
   public Long getId() {
     return id;
@@ -60,10 +69,10 @@ public class FoodStock {
 
   /**
    * Retrieves the quantity of the desired stock item in this food stock
-   * @param stockItem the desired stock item
    * @return Optional of the quantity for the desired stock item
    */
-  public Optional<Double> getTotalQuantity(StockItem stockItem) {
+  @Transient
+  public Optional<Double> getTotalQuantity() {
     // TODO update in future
 //    List<StockItem> desiredItemList = stockItems.stream()
 //        .filter(si -> si.equals(stockItem))

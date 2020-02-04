@@ -2,19 +2,20 @@ package com.app.eece4792mealmaster.services;
 
 import com.app.eece4792mealmaster.constants.Consts;
 import com.app.eece4792mealmaster.models.FoodStock;
+import com.app.eece4792mealmaster.models.Recipe;
+import com.app.eece4792mealmaster.models.StockItem;
 import com.app.eece4792mealmaster.models.User;
-import com.app.eece4792mealmaster.repositories.StockRepository;
+import com.app.eece4792mealmaster.repositories.FoodStockRepository;
+import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Utils;
-import com.app.eece4792mealmaster.utils.exceptions.BadRequest;
-import com.app.eece4792mealmaster.utils.exceptions.ForbiddenRequestException;
-import com.app.eece4792mealmaster.utils.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Optional;
 
 @Transactional
@@ -22,73 +23,54 @@ import java.util.Optional;
 public class StockService {
 
   @Autowired
-  private StockRepository stockRepository;
+  private FoodStockRepository foodStockRepository;
+
+  @Autowired
+  private StockItemRepository stockItemRepository;
 
   @Autowired
   private UserRepository userRepository;
 
-  public ApiResponse getStockById(Long foodStockId) {
-    if (foodStockId == null) {
-      throw new BadRequest();
-    }
-    Optional<FoodStock> oFoodStock = stockRepository.findById(foodStockId);
-    if (!oFoodStock.isPresent()) {
-      throw new ResourceNotFoundException();
-    }
-    return new ApiResponse(oFoodStock.get());
+  public FoodStock getFoodStockById(Long foodStockId) {
+    Optional<FoodStock> oFoodStock = foodStockRepository.findById(foodStockId);
+    return oFoodStock.orElse(null);
   }
 
-  public ApiResponse getStockByUser(Long userId) {
-    if (userId == null) {
-      throw new BadRequest();
-    }
+  public Collection<FoodStock> getStockByUser(Long userId) {
     Optional<User> oUser = userRepository.findById(userId);
-    if (!oUser.isPresent()) {
-      throw new ResourceNotFoundException();
-    }
-    return new ApiResponse(oUser.get().getFoodStocks());
+    return oUser.<Collection<FoodStock>>map(User::getFoodStocks).orElse(null);
   }
 
-  public ApiResponse createStock(HttpSession session, FoodStock foodStock) {
-    Long userId = (Long)(session.getAttribute(Consts.SessionConsts.USER_ID));
-    if (userId == null || foodStock == null) {
-      throw new BadRequest();
-    }
-    Optional<User> oUser = userRepository.findById(userId);
-    if (!oUser.isPresent()) {
-      throw new ResourceNotFoundException();
-    }
-    foodStock.setUser(oUser.get());
-    stockRepository.save(foodStock);
-    return new ApiResponse(foodStock);
+  public StockItem getStockItemById(Long stockItemId) {
+    Optional<StockItem> oStockItem = stockItemRepository.findById(stockItemId);
+    return oStockItem.orElse(null);
   }
 
-  public ApiResponse updateStock(HttpSession session, FoodStock foodStock) {
-    Long userId = (Long)(session.getAttribute(Consts.SessionConsts.USER_ID));
-    if (userId == null || foodStock == null) { throw new BadRequest(); }
-    Optional<FoodStock> oFoodStock = stockRepository.findById(foodStock.getId());
-    if (!oFoodStock.isPresent()) {
-      throw new ResourceNotFoundException();
-    }
-    FoodStock newFoodStock = oFoodStock.get();
-    if (!newFoodStock.getUser().getId().equals(userId)) {
-      throw new ForbiddenRequestException();
-    }
-    Utils.updateModel(newFoodStock, foodStock);
-    stockRepository.save(newFoodStock);
-    return new ApiResponse(newFoodStock);
+  public FoodStock addToStock(Long foodStockId, StockItem stockItem) {
+    FoodStock updatedStock = this.getFoodStockById(foodStockId);
+    if (updatedStock == null) return updatedStock;
+    updatedStock.addStockItem(stockItem);
+    foodStockRepository.save(updatedStock);
+    return updatedStock;
   }
 
-  public ApiResponse deleteStock(HttpSession session, Long foodStockId) {
-    Long userId = (Long)(session.getAttribute(Consts.SessionConsts.USER_ID));
-    Optional<FoodStock> oFoodStock = stockRepository.findById(foodStockId);
-    if (userId == null || foodStockId == null || !oFoodStock.isPresent()) {
-      throw new ResourceNotFoundException();
-    }
-    if (!oFoodStock.get().getUser().getId().equals(userId)) {
-      throw new ForbiddenRequestException();
-    }
-    stockRepository.deleteById(foodStockId);
-    return new ApiResponse();
+  public FoodStock createNewStock(Long foodId, StockItem stockItem) {
+    // TODO;
+    return null;
   }
-}
+
+  public FoodStock updateStockItem(StockItem stockItemData) {
+    Optional<StockItem> oStockItem = stockItemRepository.findById(stockItemData.getId());
+    if (!oStockItem.isPresent()) { return null; }
+    StockItem newStockItem = oStockItem.get();
+    Utils.updateModel(newStockItem, stockItemData);
+    stockItemRepository.save(newStockItem);
+    return this.getFoodStockById(stockItemData.getId());
+  }
+
+  public boolean deleteStockItem(Long stockItemId) {
+    Optional<StockItem> toDelete = stockItemRepository.findById(stockItemId);
+    toDelete.ifPresent(stockItem -> stockItemRepository.delete(stockItem));
+    return toDelete.isPresent();
+  }
+ }

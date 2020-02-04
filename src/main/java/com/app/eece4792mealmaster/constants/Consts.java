@@ -23,6 +23,11 @@ public final class Consts {
         static final String[] PATCHABLE_FIELDS = { "firstName", "lastName", "dob" };
     }
 
+    private static final class StockConsts {
+        private StockConsts() {}
+        static final String[] STOCK_ITEM_PATCHABLE_FIELDS = { "location", "dateObtained", "expirationDate", "quantity" };
+    }
+
 
     // Common
     public static final Map<String, String[]> PATCHABLE_FIELDS;
