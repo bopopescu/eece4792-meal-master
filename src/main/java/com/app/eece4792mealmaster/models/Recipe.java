@@ -2,6 +2,7 @@ package com.app.eece4792mealmaster.models;
 
 import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.*;
+import java.util.stream.Collectors;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -64,6 +65,31 @@ public class Recipe {
         RecipeIngredient recipeIngredient = new RecipeIngredient(this, ingredient);
         recipeIngredient.setServings(servings);
         this.ingredients.add(recipeIngredient);
+    }
+
+    /**
+     * Determines if this recipe this can be made
+     */
+    public boolean canRecipeBeMade() {
+        Map<GenericFood, Double> ingredients = this.ingredients.stream()
+            .collect(Collectors.toMap(
+                RecipeIngredient::getIngredient,
+                RecipeIngredient::getServings)
+            );
+
+        /*
+            For each ingredient (Generic Food), we need to grab the serving size that it requires
+            and then check to see if i have that much in my stock.
+
+            <> Stock has a 'getTotalQuantity' method that allows me to check how much i have <>
+            <> I need some sort of a mapping of an ingredient (GF) to a FoodStock (maybe a FoodStock <>
+            <> needs to keep track of a field that says which GF it refers to???) <>
+            <> Once I have that data, I will say something along the lines of ... : <>
+            <> for each ingredient, ingredient.getFoodStockEquivalent().getTotalQuantity() and compare to <>
+            <> ingredient.getServings() <>
+         */
+        ingredients.entrySet().stream().allMatch(e -> e);
+
     }
 
     // Getters and Setters
