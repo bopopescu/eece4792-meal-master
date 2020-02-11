@@ -33,6 +33,10 @@ public class FoodStock {
   @OneToMany (mappedBy = "foodStock")
   private Set<StockItem> stockItems;
 
+  @ManyToOne
+  @MapsId("genericFood")
+  private GenericFood genericFood;
+
   public void addStockItem(StockItem stockItem) {
     this.stockItems.add(stockItem);
   }
@@ -66,6 +70,15 @@ public class FoodStock {
   public void setUser(User user) {
     this.user = user;
   }
+  
+  public GenericFood getGenericFood() {
+    return genericFood;
+  }
+
+  public void setGenericFood(GenericFood genericFood) {
+    this.genericFood = genericFood;
+  }
+
 
   /**
    * Retrieves the quantity of the desired stock item in this food stock

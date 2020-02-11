@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +23,13 @@ public class GenericFood {
   @JsonIgnore
   @OneToMany (mappedBy = "genericClassification")
   private Set<Product> members;
+
+  @JsonIgnore
+  @OneToMany (mappedBy = "genericFood")
+  private FoodStock foodStock;
+
+  @JsonIgnore
+  private Set<FoodGroup> foodGroups;
 
   public Long getId() {
     return id;
@@ -37,5 +45,21 @@ public class GenericFood {
 
   public void setMembers(Set<Product> members) {
     this.members = members;
+  }
+
+  public FoodStock getFoodStock() {
+    return foodStock;
+  }
+
+  public void setFoodStock(FoodStock foodStock) {
+    this.foodStock = foodStock;
+  }
+
+  public Set<FoodGroup> getFoodGroups() {
+    return foodGroups;
+  }
+
+  public void setFoodGroups(Set<FoodGroup> foodGroups) {
+    this.foodGroups = foodGroups;
   }
 }
