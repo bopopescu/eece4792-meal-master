@@ -4,6 +4,7 @@ import static com.app.eece4792mealmaster.controllers.Routes.*;
 
 import com.app.eece4792mealmaster.models.FoodStock;
 import com.app.eece4792mealmaster.models.StockItem;
+import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.app.eece4792mealmaster.services.StockService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 
@@ -30,6 +31,9 @@ public class StockController {
     @Autowired
     private StockService stockService;
 
+    @Autowired
+    private GenericFoodService genericFoodService;
+
     @GetMapping(STOCK_API + VAR_STOCK_ID)
     public ApiResponse getStockById(HttpSession session, @RequestParam(STOCK_ID) Long stockId) {
         Long userId = Utils.getLoggedInUser(session);
@@ -41,7 +45,14 @@ public class StockController {
 
     @GetMapping(FOOD_API + VAR_FOOD_ID + STOCK)
     public ApiResponse getStockByFood(HttpSession session, @RequestParam(FOOD_ID) Long foodId) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+        // TO SEAN: I implemented this stub that you had - let me know if you were expecting this functionality
+        // it returns the corresponding food stock for this generic food
+        Long userId = Utils.getLoggedInUser(session);
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        return new ApiResponse(genericFoodService.getFoodStockByGenericFood(foodId));
+       // throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @GetMapping(STOCK_API)
