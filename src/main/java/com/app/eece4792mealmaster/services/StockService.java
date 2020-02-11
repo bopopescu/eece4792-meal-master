@@ -1,19 +1,17 @@
 package com.app.eece4792mealmaster.services;
 
-import com.app.eece4792mealmaster.constants.Consts;
 import com.app.eece4792mealmaster.models.FoodStock;
-import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.models.StockItem;
 import com.app.eece4792mealmaster.models.User;
 import com.app.eece4792mealmaster.repositories.FoodStockRepository;
 import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
-import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Utils;
+import java.util.Set;
+import javax.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
@@ -73,4 +71,18 @@ public class StockService {
     toDelete.ifPresent(stockItem -> stockItemRepository.delete(stockItem));
     return toDelete.isPresent();
   }
- }
+
+  /**
+   * Retrieves the quantity of stock items for the given foodstock
+   */
+  @Transient
+  public double getTotalQuantity(FoodStock foodStock) {
+    Set<StockItem> desiredItemList = foodStock.getStockItems();
+    double totalQuantity = 0;
+    for (StockItem stockItem : desiredItemList) {
+      totalQuantity += stockItem.getQuantity();
+    }
+
+    return totalQuantity;
+  }
+}

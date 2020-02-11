@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +18,8 @@ public class GenericFood {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  private int expirationInDays;
 
   @JsonIgnore
   @OneToMany (mappedBy = "genericClassification")
@@ -37,6 +38,14 @@ public class GenericFood {
 
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public int getExpirationInDays() {
+    return expirationInDays;
+  }
+
+  public void setExpirationInDays(int expirationInDays) {
+    this.expirationInDays = expirationInDays;
   }
 
   public Set<Product> getMembers() {
