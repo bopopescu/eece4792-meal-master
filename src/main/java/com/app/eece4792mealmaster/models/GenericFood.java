@@ -25,7 +25,7 @@ public class GenericFood {
   private Set<Product> members;
 
   @JsonIgnore
-  @OneToOne (mappedBy = "foodStockName")
+  @OneToMany (mappedBy = "genericFood")
   private FoodStock foodStock;
 
   @JsonIgnore
