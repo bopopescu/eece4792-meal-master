@@ -8,6 +8,8 @@ public final class Consts {
     private Consts() {
     }
 
+    public static final String SIMPLE_DATE_FORMAT = "yyyy-MM-dd";
+
     private static final class RecipeConsts {
         private RecipeConsts() {}
         static final String[] PATCHABLE_FIELDS = {"ingredients", "instructions", "descriptions", "yield", "tags"};

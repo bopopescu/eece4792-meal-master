@@ -1,5 +1,6 @@
 package com.app.eece4792mealmaster.models;
 
+import com.app.eece4792mealmaster.dto.RecipeIngredientId;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -82,43 +83,5 @@ public class RecipeIngredient {
     @Override
     public int hashCode() {
         return Objects.hash(getRecipe(), getIngredient());
-    }
-
-    @Embeddable
-    public class RecipeIngredientId implements Serializable {
-        @Column(name = "recipe_id")
-        private Long recipeId;
-
-        @Column(name = "generic_food_id")
-        private Long genericFoodId;
-
-        private RecipeIngredientId() {}
-
-        public RecipeIngredientId(Long recipeId, Long genericFoodId) {
-            this.recipeId = recipeId;
-            this.genericFoodId = genericFoodId;
-        }
-
-        public Long getRecipeId() {
-            return recipeId;
-        }
-
-        public Long getGenericFoodId() {
-            return genericFoodId;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            RecipeIngredientId that = (RecipeIngredientId) o;
-            return getRecipeId().equals(that.getRecipeId()) &&
-                    getGenericFoodId().equals(that.getGenericFoodId());
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(getRecipeId(), getGenericFoodId());
-        }
     }
 }

@@ -1,12 +1,13 @@
 package com.app.eece4792mealmaster.controllers;
 
-import com.app.eece4792mealmaster.constants.Consts;
+import com.app.eece4792mealmaster.dto.RecipeDto;
 import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.services.RecipeService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Utils;
 import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +40,16 @@ public class RecipeController {
     }
 
     @JsonView(Views.Detailed.class)
+    @GetMapping(RECIPE_API + VAR_RECIPE_ID)
+    public ApiResponse getRecipe(@PathVariable(RECIPE_ID) Long recipeId) {
+        Recipe recipe = recipeService.findById(recipeId);
+        if (recipe == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return new ApiResponse(recipe);
+    }
+
+    @JsonView(Views.Detailed.class)
     @PostMapping(RECIPE_API)
-    public ApiResponse createRecipe(HttpSession session, @RequestBody Recipe payload) {
+    public ApiResponse createRecipe(HttpSession session, @RequestBody RecipeDto payload) {
         Long userId = Utils.getLoggedInUser(session);
         if (userId == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -48,16 +57,20 @@ public class RecipeController {
         if (payload == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        Recipe createdRecipe = recipeService.createRecipe(userId, payload);
-        if (createdRecipe == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        try {
+            RecipeDto createdRecipe = recipeService.createRecipe(userId, payload);
+            if (createdRecipe == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+            return new ApiResponse(createdRecipe);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.toString());
         }
-        return new ApiResponse(createdRecipe);
     }
 
     @JsonView(Views.Detailed.class)
     @PutMapping(RECIPE_API)
-    public ApiResponse updateRecipe(HttpSession session, @RequestBody Recipe recipeData) {
+    public ApiResponse updateRecipe(HttpSession session, @RequestBody RecipeDto recipeData) {
         Long userId = Utils.getLoggedInUser(session);
         if (userId == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -72,11 +85,15 @@ public class RecipeController {
         if (!oldRecipe.getCreator().getId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        Recipe updatedRecipe = recipeService.updateRecipe(recipeData);
-        if (updatedRecipe == null) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            RecipeDto updatedRecipe = recipeService.updateRecipe(recipeData);
+            if (updatedRecipe == null) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return new ApiResponse(updatedRecipe);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.toString());
         }
-        return new ApiResponse(updatedRecipe);
     }
 
     @JsonView(Views.Detailed.class)
