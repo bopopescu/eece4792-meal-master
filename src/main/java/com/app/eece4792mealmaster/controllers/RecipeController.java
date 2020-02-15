@@ -42,7 +42,7 @@ public class RecipeController {
     @JsonView(Views.Detailed.class)
     @GetMapping(RECIPE_API + VAR_RECIPE_ID)
     public ApiResponse getRecipe(@PathVariable(RECIPE_ID) Long recipeId) {
-        Recipe recipe = recipeService.findById(recipeId);
+        RecipeDto recipe = recipeService.findById(recipeId);
         if (recipe == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return new ApiResponse(recipe);
     }
@@ -81,8 +81,9 @@ public class RecipeController {
         if (recipeData.getId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unspecified Recipe identifier");
         }
-        Recipe oldRecipe = recipeService.findById(recipeData.getId());
-        if (!oldRecipe.getCreator().getId().equals(userId)) {
+        recipeData.setCreator(userId);
+        RecipeDto oldRecipe = recipeService.findById(recipeData.getId());
+        if (!oldRecipe.getCreator().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         try {
@@ -99,12 +100,12 @@ public class RecipeController {
     @JsonView(Views.Detailed.class)
     @DeleteMapping(RECIPE_API + VAR_RECIPE_ID)
     public ApiResponse deleteRecipe(HttpSession session, @PathVariable(RECIPE_ID) Long recipeId) {
-        Recipe toDelete = recipeService.findById(recipeId);
+        RecipeDto toDelete = recipeService.findById(recipeId);
         if (toDelete == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Long userId = Utils.getLoggedInUser(session);
-        if (userId == null || !userId.equals(toDelete.getCreator().getId())) {
+        if (userId == null || !userId.equals(toDelete.getCreator())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         recipeService.deleteRecipe(recipeId);

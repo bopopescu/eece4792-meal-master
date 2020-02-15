@@ -40,7 +40,7 @@ final class Routes {
   // Stock Routes
   static final String STOCK = "/stock";
   static final String STOCK_API = API + STOCK;
-  static final String STOCK_ITEM = "stockItem";
+  static final String STOCK_ITEM = "/stockItem";
   static final String STOCK_ITEM_API = API + STOCK_ITEM;
 
   // Generic Food Routes

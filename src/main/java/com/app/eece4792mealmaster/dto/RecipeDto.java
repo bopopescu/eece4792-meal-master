@@ -16,7 +16,7 @@ public class RecipeDto {
 
     private Long id;
 
-    private Long creatorId;
+    private Long creator;
 
     private String formattedCreateDate;
 
@@ -44,12 +44,12 @@ public class RecipeDto {
         this.id = id;
     }
 
-    public Long getCreatorId() {
-        return creatorId;
+    public Long getCreator() {
+        return creator;
     }
 
-    public void setCreatorId(Long creatorId) {
-        this.creatorId = creatorId;
+    public void setCreator(Long creator) {
+        this.creator = creator;
     }
 
     public String getFormattedCreateDate() {
