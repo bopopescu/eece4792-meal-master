@@ -48,6 +48,8 @@ public class Recipe {
 
     private Integer yield;
 
+    private Integer cookTime;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "recipe_tag",
@@ -146,5 +148,13 @@ public class Recipe {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public Integer getCookTime() {
+        return cookTime;
+    }
+
+    public void setCookTime(Integer cookTime) {
+        this.cookTime = cookTime;
     }
 }

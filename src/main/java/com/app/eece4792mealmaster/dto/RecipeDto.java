@@ -29,6 +29,8 @@ public class RecipeDto {
 
     private Integer yield;
 
+    private Integer cookTime;
+
     private Set<Tag> tags = new HashSet<>();
 
     @JsonView(Views.Detailed.class)
@@ -108,5 +110,13 @@ public class RecipeDto {
 
     public void setIngredients(List<RecipeIngredientDto> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Integer getCookTime() {
+        return cookTime;
+    }
+
+    public void setCookTime(Integer cookTime) {
+        this.cookTime = cookTime;
     }
 }
