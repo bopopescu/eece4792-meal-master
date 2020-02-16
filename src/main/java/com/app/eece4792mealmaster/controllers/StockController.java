@@ -36,7 +36,7 @@ public class StockController {
   }
 
   @GetMapping(FOOD_API + VAR_FOOD_ID + STOCK)
-  public ApiResponse getStockByFood(HttpSession session, @RequestParam(FOOD_ID) Long foodId) {
+  public ApiResponse getStockByFood(HttpSession session, @PathVariable(FOOD_ID) Long foodId) {
       // TO SEAN: I implemented this stub that you had - let me know if you were expecting this functionality
       // it returns the corresponding food stock for this generic food
       Long userId = Utils.getLoggedInUser(session);
