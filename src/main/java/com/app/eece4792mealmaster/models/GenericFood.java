@@ -23,6 +23,10 @@ public class GenericFood {
   @OneToMany (mappedBy = "genericClassification")
   private Set<Product> members;
 
+  @JsonIgnore
+  @OneToMany (mappedBy = "food")
+  private Set<FoodStock> stocks;
+
   public Long getId() {
     return id;
   }
@@ -37,5 +41,13 @@ public class GenericFood {
 
   public void setMembers(Set<Product> members) {
     this.members = members;
+  }
+
+  public Set<FoodStock> getStocks() {
+    return stocks;
+  }
+
+  public void setStocks(Set<FoodStock> stocks) {
+    this.stocks = stocks;
   }
 }
