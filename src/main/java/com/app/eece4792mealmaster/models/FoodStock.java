@@ -2,18 +2,8 @@ package com.app.eece4792mealmaster.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.Objects;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import java.util.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "food_stock")
@@ -23,15 +13,15 @@ public class FoodStock {
   private Long id;
 
   @ManyToOne
-  @MapsId("userId")
+  @JoinColumn(name = "user_id")
   private User user;
 
   @JsonIgnore
   @OneToMany (mappedBy = "foodStock")
-  private Set<StockItem> stockItems;
+  private Set<StockItem> stockItems = new HashSet<>();
 
   @ManyToOne
-  @MapsId("foodId")
+  @JoinColumn(name = "food_id")
   private GenericFood food;
 
   public GenericFood getFood() {

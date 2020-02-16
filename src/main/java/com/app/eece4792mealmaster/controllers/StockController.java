@@ -13,14 +13,7 @@ import com.app.eece4792mealmaster.utils.Utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -83,7 +76,7 @@ public class StockController {
 //  }
 
   @PostMapping(STOCK_ITEM_API + FOOD + VAR_FOOD_ID)
-  public ApiResponse addToStock(HttpSession session, @RequestParam(FOOD_ID) Long foodId, @RequestBody StockItem payload) {
+  public ApiResponse addToStock(HttpSession session, @PathVariable(FOOD_ID) Long foodId, @RequestBody StockItem payload) {
     Long userId = Utils.getLoggedInUser(session);
     if (userId == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
