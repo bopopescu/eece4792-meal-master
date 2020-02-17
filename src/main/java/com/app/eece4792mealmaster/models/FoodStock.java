@@ -44,6 +44,18 @@ public class FoodStock {
   @Autowired
   private GenericFoodService genericFoodService;
 
+  @ManyToOne
+  @MapsId("foodId")
+  private GenericFood food;
+
+  public GenericFood getFood() {
+    return food;
+  }
+
+  public void setFood(GenericFood food) {
+    this.food = food;
+  }
+
   public void addStockItem(StockItem stockItem) {
     this.stockItems.add(stockItem);
   }

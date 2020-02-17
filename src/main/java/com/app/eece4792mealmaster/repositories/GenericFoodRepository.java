@@ -13,3 +13,4 @@ public interface GenericFoodRepository extends CrudRepository<GenericFood, Long>
   )
   public Collection<GenericFood> searchGenericFood(@Param("searchTerms") String searchTerms);
 }
+

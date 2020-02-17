@@ -34,7 +34,7 @@ public class Recipe {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<RecipeIngredient> ingredients = new ArrayList<>();
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
     @JsonView(Views.Detailed.class)
     @Column(columnDefinition = "TEXT")
@@ -47,6 +47,8 @@ public class Recipe {
     private String descriptions;
 
     private Integer yield;
+
+    private Integer cookTime;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -63,7 +65,7 @@ public class Recipe {
     public void addIngredient(GenericFood ingredient, Double servings) {
         RecipeIngredient recipeIngredient = new RecipeIngredient(this, ingredient);
         recipeIngredient.setServings(servings);
-        this.ingredients.add(recipeIngredient);
+        this.recipeIngredients.add(recipeIngredient);
     }
 
     // Getters and Setters
@@ -84,12 +86,12 @@ public class Recipe {
         this.creator = creator;
     }
 
-    public List<RecipeIngredient> getIngredients() {
-        return ingredients;
+    public List<RecipeIngredient> getRecipeIngredients() {
+        return recipeIngredients;
     }
 
-    public void setIngredients(List<RecipeIngredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
     }
 
     public String getInstructions() {
@@ -146,5 +148,13 @@ public class Recipe {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public Integer getCookTime() {
+        return cookTime;
+    }
+
+    public void setCookTime(Integer cookTime) {
+        this.cookTime = cookTime;
     }
 }

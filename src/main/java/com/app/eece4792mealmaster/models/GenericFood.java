@@ -30,11 +30,10 @@ public class GenericFood {
   private Set<Product> members;
 
   @JsonIgnore
-  @OneToMany (mappedBy = "genericFood")
-  private FoodStock foodStock;
-
-  @JsonIgnore
   private Set<FoodGroup> foodGroups;
+
+  @OneToMany (mappedBy = "food")
+  private Set<FoodStock> stocks;
 
   public Long getId() {
     return id;
@@ -76,19 +75,14 @@ public class GenericFood {
     this.members = members;
   }
 
-  public FoodStock getFoodStock() {
-    return foodStock;
-  }
-
-  public void setFoodStock(FoodStock foodStock) {
-    this.foodStock = foodStock;
-  }
-
-  public Set<FoodGroup> getFoodGroups() {
-    return foodGroups;
-  }
-
   public void setFoodGroups(Set<FoodGroup> foodGroups) {
     this.foodGroups = foodGroups;
+
+    public Set<FoodStock> getStocks() {
+    return stocks;
+  }
+
+  public void setStocks(Set<FoodStock> stocks) {
+    this.stocks = stocks;
   }
 }

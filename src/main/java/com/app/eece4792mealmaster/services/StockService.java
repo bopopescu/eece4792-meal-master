@@ -4,6 +4,7 @@ import com.app.eece4792mealmaster.models.FoodStock;
 import com.app.eece4792mealmaster.models.StockItem;
 import com.app.eece4792mealmaster.models.User;
 import com.app.eece4792mealmaster.repositories.FoodStockRepository;
+import com.app.eece4792mealmaster.repositories.GenericFoodRepository;
 import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.Utils;
@@ -28,6 +29,9 @@ public class StockService {
   private StockItemRepository stockItemRepository;
 
   @Autowired
+  private GenericFoodRepository genericFoodRepository;
+
+  @Autowired
   private UserRepository userRepository;
 
   public FoodStock getFoodStockById(Long foodStockId) {
@@ -45,17 +49,28 @@ public class StockService {
     return oStockItem.orElse(null);
   }
 
-  public FoodStock addToStock(Long foodStockId, StockItem stockItem) {
-    FoodStock updatedStock = this.getFoodStockById(foodStockId);
-    if (updatedStock == null) return updatedStock;
-    updatedStock.addStockItem(stockItem);
-    foodStockRepository.save(updatedStock);
-    return updatedStock;
-  }
+  // DO NOT USE
+//  public FoodStock addToStock(Long foodStockId, StockItem stockItem) {
+//    FoodStock updatedStock = this.getFoodStockById(foodStockId);
+//    if (updatedStock == null) return updatedStock;
+//    updatedStock.addStockItem(stockItem);
+//    foodStockRepository.save(updatedStock);
+//    return updatedStock;
+//  }
 
-  public FoodStock createNewStock(Long foodId, StockItem stockItem) {
-    // TODO;
-    return null;
+  public FoodStock addToStock(Long foodId, StockItem stockItem, Long userId) {
+    FoodStock stock = foodStockRepository.findStockByFood(userId, foodId);
+    if (stock == null) {
+      stock = new FoodStock();
+      GenericFood food = genericFoodRepository.findById(foodId).orElse(null);
+      User user = userRepository.findById(userId).orElse(null);
+      if (food == null || user == null) return null;
+      stock.setFood(food);
+      stock.setUser(user);
+    }
+    stock.addStockItem(stockItem);
+    foodStockRepository.save(stock);
+    return stock;
   }
 
   public FoodStock updateStockItem(StockItem stockItemData) {
