@@ -24,8 +24,6 @@ public class FoodStock {
 
   private String name;
 
-  private double numberOfServingsNeeded;
-
   @ManyToOne
   @MapsId("userId")
   private User user;
@@ -70,14 +68,6 @@ public class FoodStock {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public double getNumberOfServingsNeeded() {
-    return numberOfServingsNeeded;
-  }
-
-  public void setNumberOfServingsNeeded(double numberOfServingsNeeded) {
-    this.numberOfServingsNeeded = numberOfServingsNeeded;
   }
 
   public User getUser() {

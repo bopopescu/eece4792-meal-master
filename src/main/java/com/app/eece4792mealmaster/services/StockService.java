@@ -102,7 +102,7 @@ public class StockService {
    */
   public double getQuantityInGrams(FoodStock foodStock) {
     GenericFood genericFood = genericFoodService.getGenericFoodById(foodStock.getId());
-    return foodStock.getNumberOfServingsNeeded() * genericFood.getGramsPerServing();
+    return foodStock.getTotalQuantity() * genericFood.getGramsPerServing();
   }
 
 }
