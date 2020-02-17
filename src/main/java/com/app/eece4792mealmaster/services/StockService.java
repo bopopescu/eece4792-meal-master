@@ -1,6 +1,7 @@
 package com.app.eece4792mealmaster.services;
 
 import com.app.eece4792mealmaster.models.FoodStock;
+import com.app.eece4792mealmaster.models.GenericFood;
 import com.app.eece4792mealmaster.models.StockItem;
 import com.app.eece4792mealmaster.models.User;
 import com.app.eece4792mealmaster.repositories.FoodStockRepository;
@@ -66,7 +67,7 @@ public class StockService {
       User user = userRepository.findById(userId).orElse(null);
       if (food == null || user == null) return null;
       stock.setFood(food);
-      stock.setUser(user);
+      stock.setUserId(user.getId());
     }
     stock.addStockItem(stockItem);
     foodStockRepository.save(stock);

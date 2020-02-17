@@ -77,8 +77,13 @@ public class GenericFood {
 
   public void setFoodGroups(Set<FoodGroup> foodGroups) {
     this.foodGroups = foodGroups;
+  }
 
-    public Set<FoodStock> getStocks() {
+  public Set<FoodGroup> getFoodGroups() {
+    return foodGroups;
+  }
+
+  public Set<FoodStock> getStocks() {
     return stocks;
   }
 

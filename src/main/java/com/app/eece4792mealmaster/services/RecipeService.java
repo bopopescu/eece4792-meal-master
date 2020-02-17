@@ -16,9 +16,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.app.eece4792mealmaster.repositories.GenericFoodRepository;
-import com.app.eece4792mealmaster.repositories.RecipeRepository;
-import com.app.eece4792mealmaster.repositories.UserRepository;
-import com.app.eece4792mealmaster.utils.Utils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +42,6 @@ public class RecipeService {
   private FoodStockRepository foodStockRepository;
 
   private StockService stockService;
-
-  public Collection<Recipe> searchRecipes(String searchTerms) {
-      return searchTerms.equals("") ? new ArrayList<>() : recipeRepository.searchRecipes(searchTerms);
-  }
 
   @Autowired
   private GenericFoodRepository genericFoodRepository;
@@ -137,6 +130,7 @@ public class RecipeService {
         Optional<GenericFood> oIngredient = genericFoodRepository.findById(ingredientDto.getIngredient());
         oIngredient.ifPresent(genericFood -> recipe.addIngredient(genericFood, ingredientDto.getServings()));
       }
+    }
     return recipe;
   }
 
@@ -144,7 +138,7 @@ public class RecipeService {
    * Determines if this recipe this can be made
    */
   public boolean canRecipeBeMade(Recipe recipe, User user) {
-      Map<GenericFood, Double> ingredientsAndServings = recipe.getIngredients().stream()
+      Map<GenericFood, Double> ingredientsAndServings = recipe.getRecipeIngredients().stream()
           .collect(Collectors.toMap(
               RecipeIngredient::getIngredient,
               RecipeIngredient::getServings)

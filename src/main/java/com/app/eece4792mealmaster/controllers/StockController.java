@@ -50,7 +50,7 @@ public class StockController {
       if (userId == null) {
           throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
       }
-      return new ApiResponse(genericFoodService.getGenericFoodById(foodId).getFoodStock());
+      return new ApiResponse(genericFoodService.getGenericFoodById(foodId).getStocks());
      // throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
   }
 
