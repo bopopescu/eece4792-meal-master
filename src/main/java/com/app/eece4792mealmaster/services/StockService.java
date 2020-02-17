@@ -12,6 +12,7 @@ import com.app.eece4792mealmaster.utils.Utils;
 import java.util.ArrayList;
 import java.util.Set;
 import javax.persistence.Transient;
+import net.bytebuddy.asm.Advice.Unused;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class StockService {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
   private GenericFoodService genericFoodService;
 
   public FoodStock getFoodStockById(Long foodStockId) {

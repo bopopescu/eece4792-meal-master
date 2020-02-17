@@ -11,7 +11,6 @@ import com.app.eece4792mealmaster.repositories.FoodStockRepository;
 import com.app.eece4792mealmaster.repositories.RecipeRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.Utils;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -41,6 +40,7 @@ public class RecipeService {
   @Autowired
   private FoodStockRepository foodStockRepository;
 
+  @Autowired
   private StockService stockService;
 
   @Autowired
@@ -144,21 +144,16 @@ public class RecipeService {
               RecipeIngredient::getServings)
           );
 
-      // we will make a map of Generic Food Id -> the number of servings that are
-      // required to make a recipe for given generic food AKA it's corresponding foodstock
-      Map<Long, Double> requiredServingsByGenericFood = new HashMap<>();
-      ingredientsAndServings.forEach((k, v) -> requiredServingsByGenericFood.put(k.getId(), v));
+      Collection<FoodStock> foodStocks = foodStockRepository.getBulkFoodStockByGenericFood(ingredientsAndServings.keySet(), user);
+      Map<GenericFood, FoodStock> foodStockByGenericFoodId = foodStocks.stream().collect(
+          Collectors.toMap(FoodStock::getFood, Function.identity()));
 
-      Collection<FoodStock> foodStocks = foodStockRepository.getBulkFoodStockByGenericFood(requiredServingsByGenericFood.keySet(), user.getId());
-      Map<Long, FoodStock> foodStockByGenericFoodId = foodStocks.stream().collect(
-          Collectors.toMap(fs -> fs.getFood().getId(), Function.identity()));
-
-      for(Map.Entry<Long, FoodStock> entry : foodStockByGenericFoodId.entrySet()) {
+      for(Map.Entry<GenericFood, FoodStock> entry : foodStockByGenericFoodId.entrySet()) {
           FoodStock currentIngredient = entry.getValue();
           double availableServings = currentIngredient.getTotalQuantity();
-          Long genericFoodId = entry.getKey();
+          GenericFood genericFood = entry.getKey();
           // if the amount that we need is more than what we have, return false
-          if (requiredServingsByGenericFood.get(genericFoodId) > availableServings) {
+          if (ingredientsAndServings.get(genericFood) > availableServings) {
               return false;
           }
       }
