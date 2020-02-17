@@ -32,10 +32,6 @@ public class FoodStock {
   @MapsId("userId")
   private long userId;
 
-  @ManyToOne
-  @MapsId("genericFoodId")
-  private long genericFoodId;
-
   @JsonIgnore
   @OneToMany (mappedBy = "foodStock")
   private Set<StockItem> stockItems;
@@ -99,14 +95,6 @@ public class FoodStock {
   }
 
 
-  public long getGenericFoodId() {
-    return genericFoodId;
-  }
-
-  public void setGenericFoodId(long genericFoodId) {
-    this.genericFoodId = genericFoodId;
-  }
-
   public Set<StockItem> getStockItems() {
     return stockItems;
   }
@@ -115,13 +103,12 @@ public class FoodStock {
     this.stockItems = stockItems;
   }
 
-
   /**
    * Retrieves the quantity in grams that is required for this foodstock
    */
   @Transient
   public double getQuantityInGrams() {
-    GenericFood genericFood = genericFoodService.getGenericFoodById(this.genericFoodId);
+    GenericFood genericFood = genericFoodService.getGenericFoodById(this.food.getId());
     return this.numberOfServingsNeeded * genericFood.getGramsPerServing();
   }
 

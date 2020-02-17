@@ -151,7 +151,7 @@ public class RecipeService {
 
       Collection<FoodStock> foodStocks = foodStockRepository.getBulkFoodStockByGenericFood(requiredServingsByGenericFood.keySet(), user.getId());
       Map<Long, FoodStock> foodStockByGenericFoodId = foodStocks.stream().collect(
-          Collectors.toMap(FoodStock::getGenericFoodId, Function.identity()));
+          Collectors.toMap(fs -> fs.getFood().getId(), Function.identity()));
 
       for(Map.Entry<Long, FoodStock> entry : foodStockByGenericFoodId.entrySet()) {
           FoodStock currentIngredient = entry.getValue();
