@@ -1,5 +1,6 @@
 package com.app.eece4792mealmaster.models;
 
+import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Objects;
@@ -13,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "food_stock")
@@ -20,6 +23,10 @@ public class FoodStock {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  private String name;
+
+  private double numberOfServingsNeeded;
 
   @ManyToOne
   @MapsId("userId")
@@ -32,6 +39,10 @@ public class FoodStock {
   @JsonIgnore
   @OneToMany (mappedBy = "foodStock")
   private Set<StockItem> stockItems;
+
+  @JsonIgnore
+  @Autowired
+  private GenericFoodService genericFoodService;
 
   public void addStockItem(StockItem stockItem) {
     this.stockItems.add(stockItem);
@@ -49,6 +60,22 @@ public class FoodStock {
 
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public double getNumberOfServingsNeeded() {
+    return numberOfServingsNeeded;
+  }
+
+  public void setNumberOfServingsNeeded(double numberOfServingsNeeded) {
+    this.numberOfServingsNeeded = numberOfServingsNeeded;
   }
 
   public long getUserId() {
@@ -74,6 +101,30 @@ public class FoodStock {
 
   public void setStockItems(Set<StockItem> stockItems) {
     this.stockItems = stockItems;
+  }
+
+
+  /**
+   * Retrieves the quantity in grams that is required for this foodstock
+   */
+  @Transient
+  public double getQuantityInGrams() {
+    GenericFood genericFood = genericFoodService.getGenericFoodById(this.genericFoodId);
+    return this.numberOfServingsNeeded * genericFood.getGramsPerServing();
+  }
+
+  /**
+   * Retrieves the quantity of stock items for the given foodstock
+   */
+  @Transient
+  public double getTotalQuantity() {
+    Set<StockItem> desiredItemList = this.getStockItems();
+    double totalQuantity = 0;
+    for (StockItem stockItem : desiredItemList) {
+      totalQuantity += stockItem.getQuantity();
+    }
+
+    return totalQuantity;
   }
 
   @Override

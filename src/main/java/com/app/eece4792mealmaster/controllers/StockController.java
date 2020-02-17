@@ -2,7 +2,6 @@ package com.app.eece4792mealmaster.controllers;
 
 import static com.app.eece4792mealmaster.controllers.Routes.*;
 
-import com.app.eece4792mealmaster.models.FoodStock;
 import com.app.eece4792mealmaster.models.StockItem;
 import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.app.eece4792mealmaster.services.StockService;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import com.app.eece4792mealmaster.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +49,7 @@ public class StockController {
         if (userId == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        return new ApiResponse(genericFoodService.getFoodStockByGenericFood(foodId));
+        return new ApiResponse(genericFoodService.getGenericFoodById(foodId).getFoodStock());
        // throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 

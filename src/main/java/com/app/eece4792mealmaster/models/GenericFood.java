@@ -19,7 +19,11 @@ public class GenericFood {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private String name;
+
   private int expirationInDays;
+
+  private double gramsPerServing;
 
   @JsonIgnore
   @OneToMany (mappedBy = "genericClassification")
@@ -40,12 +44,28 @@ public class GenericFood {
     this.id = id;
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public int getExpirationInDays() {
     return expirationInDays;
   }
 
   public void setExpirationInDays(int expirationInDays) {
     this.expirationInDays = expirationInDays;
+  }
+
+  public double getGramsPerServing() {
+    return gramsPerServing;
+  }
+
+  public void setGramsPerServing(double gramsPerServing) {
+    this.gramsPerServing = gramsPerServing;
   }
 
   public Set<Product> getMembers() {

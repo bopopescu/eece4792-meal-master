@@ -93,7 +93,7 @@ public class RecipeService {
 
         for(Map.Entry<Long, FoodStock> entry : foodStockByGenericFoodId.entrySet()) {
             FoodStock currentIngredient = entry.getValue();
-            double availableServings = stockService.getTotalQuantity(currentIngredient);
+            double availableServings = currentIngredient.getTotalQuantity();
             Long genericFoodId = entry.getKey();
             // if the amount that we need is more than what we have, return false
             if (requiredServingsByGenericFood.get(genericFoodId) > availableServings) {

@@ -7,6 +7,7 @@ import com.app.eece4792mealmaster.repositories.FoodStockRepository;
 import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.Utils;
+import java.util.ArrayList;
 import java.util.Set;
 import javax.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,17 +73,8 @@ public class StockService {
     return toDelete.isPresent();
   }
 
-  /**
-   * Retrieves the quantity of stock items for the given foodstock
-   */
-  @Transient
-  public double getTotalQuantity(FoodStock foodStock) {
-    Set<StockItem> desiredItemList = foodStock.getStockItems();
-    double totalQuantity = 0;
-    for (StockItem stockItem : desiredItemList) {
-      totalQuantity += stockItem.getQuantity();
-    }
-
-    return totalQuantity;
+  public Collection<FoodStock> getFoodStockByName(String foodStockName) {
+    return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
   }
+
 }

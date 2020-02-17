@@ -1,9 +1,9 @@
 package com.app.eece4792mealmaster.services;
 
-import com.app.eece4792mealmaster.models.FoodStock;
 import com.app.eece4792mealmaster.models.GenericFood;
 import com.app.eece4792mealmaster.repositories.GenericFoodRepository;
-import com.sun.tools.javac.jvm.Gen;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,7 @@ public class GenericFoodService {
     return oGenericFood.orElse(null);
   }
 
-  public FoodStock getFoodStockByGenericFood(Long genericFoodId) {
-    GenericFood genericFood = getGenericFoodById(genericFoodId);
-    return genericFood.getFoodStock();
+  public Collection<GenericFood> getGenericFoodByName(String genericFoodName) {
+    return genericFoodName.equals("") ? new ArrayList<>() : genericFoodRepository.searchGenericFood(genericFoodName);
   }
 }
