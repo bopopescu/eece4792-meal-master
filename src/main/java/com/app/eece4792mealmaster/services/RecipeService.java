@@ -121,10 +121,13 @@ public class RecipeService {
 
   public Recipe convertToEntity(RecipeDto recipeDto) throws ParseException {
     if (recipeDto == null) return null;
-    if (!userRepository.findById(recipeDto.getCreator()).isPresent()) return null;
-    modelMapper.typeMap(RecipeDto.class, Recipe.class).addMapping(src -> userRepository.findById(src.getCreator()), Recipe::setCreator);
-    Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
-    recipe.setCreateDate(recipeDto.getCreateDate());
+    Optional<User> oCreator = userRepository.findById(recipeDto.getCreator());
+    if (!oCreator.isPresent()) return null;
+    // modelMapper.typeMap(RecipeDto.class, Recipe.class).addMappings(mapper -> mapper.skip(Recipe::setCreator));
+    // Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
+    Recipe recipe = new Recipe(recipeDto);
+    if (recipeDto.getFormattedCreateDate() != null) recipe.setCreateDate(recipeDto.getCreateDate());
+    recipe.setCreator(oCreator.get());
     for (RecipeIngredientDto ingredientDto : recipeDto.getIngredients()) {
       if (!(ingredientDto.getIngredient() == null || ingredientDto.getServings() == null)) {
         Optional<GenericFood> oIngredient = genericFoodRepository.findById(ingredientDto.getIngredient());

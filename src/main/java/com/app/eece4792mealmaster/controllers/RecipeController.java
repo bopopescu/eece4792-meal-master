@@ -1,13 +1,11 @@
 package com.app.eece4792mealmaster.controllers;
 
 import com.app.eece4792mealmaster.dto.RecipeDto;
-import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.services.RecipeService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Utils;
 import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

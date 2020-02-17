@@ -1,5 +1,6 @@
 package com.app.eece4792mealmaster.models;
 
+import com.app.eece4792mealmaster.dto.RecipeDto;
 import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,6 +12,17 @@ import java.util.*;
 @Table(name = "recipes")
 public class Recipe {
     public Recipe() {
+    }
+
+    public Recipe(RecipeDto recipeDto)
+    {
+        id = recipeDto.getId();
+        descriptions = recipeDto.getDescriptions();
+        instructions = recipeDto.getInstructions();
+        name = recipeDto.getName();
+        yield = recipeDto.getYield();
+        cookTime = recipeDto.getCookTime();
+        tags = recipeDto.getTags();
     }
 
     @Id
