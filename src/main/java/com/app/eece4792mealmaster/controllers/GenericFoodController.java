@@ -24,7 +24,7 @@ public class GenericFoodController {
   private GenericFoodService genericFoodService;
 
   @GetMapping(FOOD_API + VAR_FOOD_ID)
-  public ApiResponse getGenericFoodById(HttpSession session, @PathVariable(FOOD_ID) Long foodId) {
+  public ApiResponse getGenericFoodById(@PathVariable(FOOD_ID) Long foodId) {
     return new ApiResponse(genericFoodService.getGenericFoodById(foodId));
   }
 }

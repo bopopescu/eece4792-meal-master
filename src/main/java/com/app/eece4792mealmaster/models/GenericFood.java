@@ -32,6 +32,7 @@ public class GenericFood {
 //  @JsonIgnore
 //  private Set<FoodGroup> foodGroups;
 
+  @JsonIgnore
   @OneToMany (mappedBy = "food")
   private Set<FoodStock> stocks;
 
