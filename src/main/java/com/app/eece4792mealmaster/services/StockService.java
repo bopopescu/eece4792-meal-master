@@ -35,6 +35,8 @@ public class StockService {
   @Autowired
   private UserRepository userRepository;
 
+  private GenericFoodService genericFoodService;
+
   public FoodStock getFoodStockById(Long foodStockId) {
     Optional<FoodStock> oFoodStock = foodStockRepository.findById(foodStockId);
     return oFoodStock.orElse(null);
@@ -67,7 +69,7 @@ public class StockService {
       User user = userRepository.findById(userId).orElse(null);
       if (food == null || user == null) return null;
       stock.setFood(food);
-      stock.setUserId(user.getId());
+      stock.setUser(user);
     }
     stock.addStockItem(stockItem);
     foodStockRepository.save(stock);
@@ -91,6 +93,14 @@ public class StockService {
 
   public Collection<FoodStock> getFoodStockByName(String foodStockName) {
     return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
+  }
+
+  /**
+   * Retrieves the quantity in grams that is required for this foodstock
+   */
+  public double getQuantityInGrams(FoodStock foodStock) {
+    GenericFood genericFood = genericFoodService.getGenericFoodById(foodStock.getId());
+    return foodStock.getNumberOfServingsNeeded() * genericFood.getGramsPerServing();
   }
 
 }

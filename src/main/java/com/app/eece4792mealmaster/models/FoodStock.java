@@ -1,6 +1,5 @@
 package com.app.eece4792mealmaster.models;
 
-import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Objects;
@@ -15,7 +14,6 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "food_stock")
@@ -30,15 +28,11 @@ public class FoodStock {
 
   @ManyToOne
   @MapsId("userId")
-  private long userId;
+  private User user;
 
   @JsonIgnore
   @OneToMany (mappedBy = "foodStock")
   private Set<StockItem> stockItems;
-
-  @JsonIgnore
-  @Autowired
-  private GenericFoodService genericFoodService;
 
   @ManyToOne
   @MapsId("foodId")
@@ -86,14 +80,13 @@ public class FoodStock {
     this.numberOfServingsNeeded = numberOfServingsNeeded;
   }
 
-  public long getUserId() {
-    return userId;
+  public User getUser() {
+    return user;
   }
 
-  public void setUserId(long userId) {
-    this.userId = userId;
+  public void setUser(User user) {
+    this.user = user;
   }
-
 
   public Set<StockItem> getStockItems() {
     return stockItems;
@@ -101,15 +94,6 @@ public class FoodStock {
 
   public void setStockItems(Set<StockItem> stockItems) {
     this.stockItems = stockItems;
-  }
-
-  /**
-   * Retrieves the quantity in grams that is required for this foodstock
-   */
-  @Transient
-  public double getQuantityInGrams() {
-    GenericFood genericFood = genericFoodService.getGenericFoodById(this.food.getId());
-    return this.numberOfServingsNeeded * genericFood.getGramsPerServing();
   }
 
   /**
