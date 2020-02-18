@@ -113,10 +113,16 @@ def parse_trader_joes(lines):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parses the provided image")
     parser.add_argument('--image_path', help="Path to image of receipt", required=True)
+    parser.add_argument('--use_url', help="Use flag to get image from url instead of local path", required=False, action='store_true')
     args = parser.parse_args()
 
     path = args.image_path
+    use_url = args.use_url
 
     print("Parsed Foods:")
-    print(parse_foods(request_from_local(path)))
+
+    if (use_url):
+        print(parse_foods(request_from_url(path)))
+    else:
+        print(parse_foods(request_from_local(path)))
     input("Press Enter to continue...")
