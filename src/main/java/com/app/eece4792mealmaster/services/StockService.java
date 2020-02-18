@@ -10,9 +10,7 @@ import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.Utils;
 import java.util.ArrayList;
-import java.util.Set;
-import javax.persistence.Transient;
-import net.bytebuddy.asm.Advice.Unused;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,14 +93,6 @@ public class StockService {
 
   public Collection<FoodStock> getFoodStockByName(String foodStockName) {
     return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
-  }
-
-  /**
-   * Retrieves the quantity in grams that is required for this foodstock
-   */
-  public double getQuantityInGrams(FoodStock foodStock) {
-    GenericFood genericFood = genericFoodService.getGenericFoodById(foodStock.getId());
-    return foodStock.getTotalQuantity() * genericFood.getGramsPerServing();
   }
 
 }

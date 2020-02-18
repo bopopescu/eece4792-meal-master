@@ -100,6 +100,14 @@ public class FoodStock {
     return totalQuantity;
   }
 
+  /**
+   * Retrieves the quantity in grams that is required for this foodstock
+   */
+  @Transient
+  public double getQuantityInGrams() {
+    return this.getTotalQuantity() * this.food.getGramsPerServing();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o instanceof FoodStock) {
