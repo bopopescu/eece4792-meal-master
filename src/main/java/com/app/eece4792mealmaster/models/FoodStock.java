@@ -2,12 +2,9 @@ package com.app.eece4792mealmaster.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
-import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -63,14 +60,6 @@ public class FoodStock {
     this.id = id;
   }
 
-  public Set<StockItem> getStockItems() {
-    return stockItems;
-  }
-
-  public void setStockItems(Set<StockItem> stockItems) {
-    this.stockItems = stockItems;
-  }
-
   public User getUser() {
     return user;
   }
@@ -79,20 +68,34 @@ public class FoodStock {
     this.user = user;
   }
 
+  public Set<StockItem> getStockItems() {
+    return stockItems;
+  }
+
+  public void setStockItems(Set<StockItem> stockItems) {
+    this.stockItems = stockItems;
+  }
+
   /**
-   * Retrieves the quantity of the desired stock item in this food stock
-   * @return Optional of the quantity for the desired stock item
+   * Retrieves the quantity of stock items for the given foodstock
    */
   @Transient
-  public Optional<Double> getTotalQuantity() {
-    // TODO update in future
-//    List<StockItem> desiredItemList = stockItems.stream()
-//        .filter(si -> si.equals(stockItem))
-//        .collect(Collectors.toList());
-//    return desiredItemList.isEmpty() ?
-//        Optional.empty() :
-//        Optional.of(desiredItemList.get(0).getQuantity());
-    return Optional.empty();
+  public double getTotalQuantity() {
+    Set<StockItem> desiredItemList = this.getStockItems();
+    double totalQuantity = 0;
+    for (StockItem stockItem : desiredItemList) {
+      totalQuantity += stockItem.getQuantity();
+    }
+
+    return totalQuantity;
+  }
+
+  /**
+   * Retrieves the quantity in grams that is required for this foodstock
+   */
+  @Transient
+  public double getQuantityInGrams() {
+    return this.getTotalQuantity() * this.food.getGramsPerServing();
   }
 
   @Override

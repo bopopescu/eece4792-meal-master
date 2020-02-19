@@ -1,21 +1,19 @@
 package com.app.eece4792mealmaster.services;
 
-import com.app.eece4792mealmaster.constants.Consts;
 import com.app.eece4792mealmaster.models.FoodStock;
 import com.app.eece4792mealmaster.models.GenericFood;
-import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.models.StockItem;
 import com.app.eece4792mealmaster.models.User;
 import com.app.eece4792mealmaster.repositories.FoodStockRepository;
 import com.app.eece4792mealmaster.repositories.GenericFoodRepository;
 import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
-import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Utils;
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
@@ -35,6 +33,9 @@ public class StockService {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private GenericFoodService genericFoodService;
 
   public FoodStock getFoodStockById(Long foodStockId) {
     Optional<FoodStock> oFoodStock = foodStockRepository.findById(foodStockId);
@@ -89,4 +90,9 @@ public class StockService {
     toDelete.ifPresent(stockItem -> stockItemRepository.delete(stockItem));
     return toDelete.isPresent();
   }
- }
+
+  public Collection<FoodStock> getFoodStockByName(String foodStockName) {
+    return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
+  }
+
+}

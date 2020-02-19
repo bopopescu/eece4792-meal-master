@@ -19,9 +19,18 @@ public class GenericFood {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private String name;
+
+  private int averageExpirationDurations;
+
+  private double gramsPerServing;
+
   @JsonIgnore
   @OneToMany (mappedBy = "genericClassification")
   private Set<Product> members;
+
+//  @JsonIgnore
+//  private Set<FoodGroup> foodGroups;
 
   @JsonIgnore
   @OneToMany (mappedBy = "food")
@@ -35,6 +44,30 @@ public class GenericFood {
     this.id = id;
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getAverageExpirationDurations() {
+    return averageExpirationDurations;
+  }
+
+  public void setAverageExpirationDurations(int averageExpirationDurations) {
+    this.averageExpirationDurations = averageExpirationDurations;
+  }
+
+  public double getGramsPerServing() {
+    return gramsPerServing;
+  }
+
+  public void setGramsPerServing(double gramsPerServing) {
+    this.gramsPerServing = gramsPerServing;
+  }
+
   public Set<Product> getMembers() {
     return members;
   }
@@ -42,6 +75,14 @@ public class GenericFood {
   public void setMembers(Set<Product> members) {
     this.members = members;
   }
+//
+//  public void setFoodGroups(Set<FoodGroup> foodGroups) {
+//    this.foodGroups = foodGroups;
+//  }
+//
+//  public Set<FoodGroup> getFoodGroups() {
+//    return foodGroups;
+//  }
 
   public Set<FoodStock> getStocks() {
     return stocks;

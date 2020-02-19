@@ -1,15 +1,20 @@
 package com.app.eece4792mealmaster.services;
 
+import com.app.eece4792mealmaster.models.FoodStock;
 import com.app.eece4792mealmaster.dto.RecipeDto;
 import com.app.eece4792mealmaster.dto.RecipeIngredientDto;
 import com.app.eece4792mealmaster.models.GenericFood;
 import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.models.RecipeIngredient;
 import com.app.eece4792mealmaster.models.User;
-import com.app.eece4792mealmaster.repositories.GenericFoodRepository;
+import com.app.eece4792mealmaster.repositories.FoodStockRepository;
 import com.app.eece4792mealmaster.repositories.RecipeRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.Utils;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import com.app.eece4792mealmaster.repositories.GenericFoodRepository;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +38,14 @@ public class RecipeService {
   private UserRepository userRepository;
 
   @Autowired
+  private FoodStockRepository foodStockRepository;
+
+  @Autowired
+  private StockService stockService;
+
+  @Autowired
   private GenericFoodRepository genericFoodRepository;
+
 
   @Autowired
   private ModelMapper modelMapper;
@@ -121,4 +133,30 @@ public class RecipeService {
     }
     return recipe;
   }
+
+  /**
+   * Determines if this recipe this can be made
+   */
+  public boolean canRecipeBeMade(Recipe recipe, User user) {
+      Map<GenericFood, Double> ingredientsAndServings = recipe.getRecipeIngredients().stream()
+          .collect(Collectors.toMap(
+              RecipeIngredient::getIngredient,
+              RecipeIngredient::getServings)
+          );
+
+      Collection<FoodStock> foodStocks = foodStockRepository.getBulkFoodStockByGenericFood(ingredientsAndServings.keySet(), user);
+      Map<GenericFood, FoodStock> foodStockByGenericFoodId = foodStocks.stream().collect(
+          Collectors.toMap(FoodStock::getFood, Function.identity()));
+
+      for(Map.Entry<GenericFood, FoodStock> entry : foodStockByGenericFoodId.entrySet()) {
+          FoodStock currentIngredient = entry.getValue();
+          double availableServings = currentIngredient.getTotalQuantity();
+          GenericFood genericFood = entry.getKey();
+          // if the amount that we need is more than what we have, return false
+          if (ingredientsAndServings.get(genericFood) > availableServings) {
+              return false;
+          }
+      }
+      return true;
+    }
 }
