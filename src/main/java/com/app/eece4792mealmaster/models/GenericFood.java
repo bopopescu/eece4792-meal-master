@@ -19,9 +19,9 @@ public class GenericFood {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String food;
+  private String name;
 
-  private int expirationInDays;
+  private int averageExpirationDurations;
 
   private double gramsPerServing;
 
@@ -45,19 +45,19 @@ public class GenericFood {
   }
 
   public String getName() {
-    return food;
+    return name;
   }
 
   public void setName(String name) {
-    this.food = name;
+    this.name = name;
   }
 
-  public int getExpirationInDays() {
-    return expirationInDays;
+  public int getAverageExpirationDurations() {
+    return averageExpirationDurations;
   }
 
-  public void setExpirationInDays(int expirationInDays) {
-    this.expirationInDays = expirationInDays;
+  public void setAverageExpirationDurations(int averageExpirationDurations) {
+    this.averageExpirationDurations = averageExpirationDurations;
   }
 
   public double getGramsPerServing() {
