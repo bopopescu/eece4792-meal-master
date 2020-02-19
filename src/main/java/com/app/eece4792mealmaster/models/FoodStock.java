@@ -22,8 +22,6 @@ public class FoodStock {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String name;
-
   @ManyToOne
   @MapsId("userId")
   private User user;
@@ -60,14 +58,6 @@ public class FoodStock {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public User getUser() {

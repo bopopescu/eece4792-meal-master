@@ -11,9 +11,4 @@ import javax.persistence.Table;
 public enum FoodGroup {
 
   FRUITS, VEGETABLES, GRAINS, PROTEIN, DAIRY;
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-
-
 }
