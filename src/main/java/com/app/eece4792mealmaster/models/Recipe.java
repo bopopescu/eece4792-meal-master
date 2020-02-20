@@ -25,6 +25,13 @@ public class Recipe {
         tags = recipeDto.getTags();
     }
 
+    public Recipe(Recipe recipe)
+    {
+        id = recipe.getId();
+        creator = recipe.getCreator();
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

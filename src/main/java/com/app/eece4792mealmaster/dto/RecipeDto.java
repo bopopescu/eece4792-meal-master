@@ -1,6 +1,7 @@
 package com.app.eece4792mealmaster.dto;
 
 import com.app.eece4792mealmaster.constants.Consts;
+import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.models.Tag;
 import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -13,6 +14,18 @@ public class RecipeDto {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat(Consts.SIMPLE_DATE_FORMAT);
 
     public RecipeDto() {}
+
+    public RecipeDto(Recipe recipe)
+    {
+        id = recipe.getId();
+        name = recipe.getName();
+        descriptions = recipe.getDescriptions();
+        instructions = recipe.getInstructions();
+        yield = recipe.getYield();
+        cookTime = recipe.getCookTime();
+        tags = recipe.getTags();
+        creator = recipe.getCreator().getId();
+    }
 
     private Long id;
 
