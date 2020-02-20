@@ -1,6 +1,9 @@
 package com.app.eece4792mealmaster.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.*;
 import javax.persistence.*;
@@ -12,16 +15,18 @@ public class FoodStock {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
 
-  @JsonIgnore
   @OneToMany (mappedBy = "foodStock")
   private Set<StockItem> stockItems = new HashSet<>();
 
   @ManyToOne
   @JoinColumn(name = "food_id")
+  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+  @JsonIdentityReference(alwaysAsId = true)
   private GenericFood food;
 
   public GenericFood getFood() {

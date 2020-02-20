@@ -27,7 +27,7 @@ public class StockController {
   private GenericFoodService genericFoodService;
   
   @GetMapping(STOCK_API + VAR_STOCK_ID)
-  public ApiResponse getStockById(HttpSession session, @RequestParam(STOCK_ID) Long stockId) {
+  public ApiResponse getStockById(HttpSession session, @PathVariable(STOCK_ID) Long stockId) {
     Long userId = Utils.getLoggedInUser(session);
     if (userId == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -53,11 +53,12 @@ public class StockController {
     if (userId == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
+
     return new ApiResponse(stockService.getStockByUser(userId));
   }
 
   @GetMapping(STOCK_ITEM_API + VAR_STOCK_ITEM_ID)
-  public ApiResponse getStockItemById(HttpSession session, @RequestParam(STOCK_ITEM_ID) Long stockItemId) {
+  public ApiResponse getStockItemById(HttpSession session, @PathVariable(STOCK_ITEM_ID) Long stockItemId) {
     Long userId = Utils.getLoggedInUser(session);
     if (userId == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -94,7 +95,7 @@ public class StockController {
   }
 
   @DeleteMapping(STOCK_ITEM_API + VAR_STOCK_ITEM_ID)
-  public ApiResponse deleteStock(HttpSession session, @RequestParam(STOCK_ITEM_ID) Long stockItemId) {
+  public ApiResponse deleteStock(HttpSession session, @PathVariable(STOCK_ITEM_ID) Long stockItemId) {
     Long userId = Utils.getLoggedInUser(session);
     if (userId == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);

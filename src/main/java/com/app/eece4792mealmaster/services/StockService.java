@@ -72,6 +72,8 @@ public class StockService {
       stock.setUser(user);
     }
     stock.addStockItem(stockItem);
+    stockItem.setFoodStock(stock);
+    stockItemRepository.save(stockItem);
     foodStockRepository.save(stock);
     return stock;
   }

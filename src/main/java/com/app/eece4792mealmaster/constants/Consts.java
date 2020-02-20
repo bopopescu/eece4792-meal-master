@@ -12,7 +12,7 @@ public final class Consts {
 
     private static final class RecipeConsts {
         private RecipeConsts() {}
-        static final String[] PATCHABLE_FIELDS = {"ingredients", "instructions", "descriptions", "yield", "tags"};
+        static final String[] PATCHABLE_FIELDS = {"recipeIngredients", "instructions", "descriptions", "yield", "tags", "cookTime"};
     }
 
     public static final class SessionConsts {
