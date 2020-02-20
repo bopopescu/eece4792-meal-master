@@ -62,6 +62,7 @@ public class StockService {
 //  }
 
   public FoodStock addToStock(Long foodId, StockItem stockItem, Long userId) {
+    
     FoodStock stock = foodStockRepository.findStockByFood(userId, foodId);
     if (stock == null) {
       stock = new FoodStock();
@@ -73,7 +74,7 @@ public class StockService {
 
     }
 
-    stock.addStockItem(stockItem);
+    // stock.addStockItem(stockItem);
     foodStockRepository.save(stock);
 
     stockItem.setFoodStock(stock);
