@@ -70,11 +70,14 @@ public class StockService {
       if (food == null || user == null) return null;
       stock.setFood(food);
       stock.setUser(user);
+
     }
+
     stock.addStockItem(stockItem);
+    foodStockRepository.save(stock);
+
     stockItem.setFoodStock(stock);
     stockItemRepository.save(stockItem);
-    foodStockRepository.save(stock);
     return stock;
   }
 
