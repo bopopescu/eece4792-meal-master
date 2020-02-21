@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 public interface FoodStockRepository extends CrudRepository<FoodStock, Long> {
   @Query(value = "SELECT foodStock " +
       "FROM FoodStock foodStock " +
-      "WHERE foodStock.food IN :genericFoods and foodstock.user = :user", nativeQuery = true
+      "WHERE foodStock.food IN :genericFoods and foodStock.user = :user", nativeQuery = true
   )
   public Collection<FoodStock> getBulkFoodStockByGenericFood(@Param("genericFoods") Set<GenericFood> genericFoods, @Param("user") User user);
 
@@ -23,9 +23,9 @@ public interface FoodStockRepository extends CrudRepository<FoodStock, Long> {
   )
   public Collection<FoodStock> searchFoodStock(@Param("searchTerms") String searchTerms);
 
-  @Query(value = "SELECT stock " +
+  @Query("SELECT stock " +
           "FROM FoodStock stock " +
-          "WHERE (stock.user.id=:userId AND stock.food.id=:foodId", nativeQuery = true
+          "WHERE (stock.user.id=:userId AND stock.food.id=:foodId)"
   )
   public FoodStock findStockByFood(@Param("userId") Long userId, @Param("foodId") Long foodId);
 }

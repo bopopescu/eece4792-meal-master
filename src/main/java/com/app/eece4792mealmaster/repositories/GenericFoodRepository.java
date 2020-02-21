@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 public interface GenericFoodRepository extends CrudRepository<GenericFood, Long> {
   @Query("SELECT genericFood " +
       "FROM GenericFood genericFood " +
-      "WHERE genericFood.food LIKE :searchTerms%"
+      "WHERE genericFood.name LIKE :searchTerms%"
   )
   public Collection<GenericFood> searchGenericFood(@Param("searchTerms") String searchTerms);
 }

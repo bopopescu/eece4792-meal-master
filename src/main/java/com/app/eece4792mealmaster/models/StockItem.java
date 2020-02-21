@@ -16,7 +16,6 @@ public class StockItem {
 
   @JsonIgnore
   @ManyToOne
-  //@MapsId("foodStockId")
   @JoinColumn(name = "food_stock_id")
   private FoodStock foodStock;
 
@@ -78,12 +77,18 @@ public class StockItem {
     this.quantity = quantity;
   }
 
+  @Transient
+  public Double getQuantityInGrams() {
+    return this.foodStock.getFood().getGramsPerServing() * this.quantity;
+  }
+
   /**
    * @return whether this food stock item is expired
    */
-  public boolean isExpired() {
-    return LocalDate.now(ZoneId.systemDefault()).isAfter(expirationDate);
-  }
+//  @Transient
+//  public boolean isExpired() {
+//    return LocalDate.now(ZoneId.systemDefault()).isAfter(expirationDate);
+//  }
 
   @Override
   public boolean equals(Object o) {

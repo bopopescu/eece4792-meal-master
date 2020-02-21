@@ -35,16 +35,13 @@ public class StockController {
     return new ApiResponse(stockService.getFoodStockById(stockId));
   }
 
-  @GetMapping(FOOD_API + VAR_FOOD_ID + STOCK)
+  @GetMapping(STOCK_API + FOOD + VAR_FOOD_ID)
   public ApiResponse getStockByFood(HttpSession session, @PathVariable(FOOD_ID) Long foodId) {
-      // TO SEAN: I implemented this stub that you had - let me know if you were expecting this functionality
-      // it returns the corresponding food stock for this generic food
       Long userId = Utils.getLoggedInUser(session);
       if (userId == null) {
           throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
       }
-      return new ApiResponse(genericFoodService.getGenericFoodById(foodId).getStocks());
-     // throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+      return new ApiResponse(stockService.getFoodStockByFood(userId, foodId));
   }
 
   @GetMapping(STOCK_API)
@@ -66,17 +63,7 @@ public class StockController {
     return new ApiResponse(stockService.getStockItemById(stockItemId));
   }
 
-  // DO NOT USE
-//  @PostMapping(STOCK_ITEM_API + VAR_STOCK_ID)
-//  public ApiResponse addStockItem(HttpSession session, @RequestParam(STOCK_ID) Long stockId, @RequestBody StockItem payload) {
-//    Long userId = Utils.getLoggedInUser(session);
-//    if (userId == null) {
-//      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-//    }
-//    return new ApiResponse(stockService.addToStock(stockId, payload));
-//  }
-
-  @PostMapping(STOCK_ITEM_API + FOOD + VAR_FOOD_ID)
+  @PostMapping("/api/stock/food/{foodId}")// STOCK_ITEM_API + FOOD + VAR_FOOD_ID)
   public ApiResponse addToStock(HttpSession session, @PathVariable(FOOD_ID) Long foodId, @RequestBody StockItem payload) {
     Long userId = Utils.getLoggedInUser(session);
     if (userId == null) {
