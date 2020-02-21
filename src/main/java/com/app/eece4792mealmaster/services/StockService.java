@@ -74,6 +74,9 @@ public class StockService {
 
     stockItem.setFoodStock(stock);
     stockItem.setDateObtained(LocalDate.now());
+    if (stockItem.getExpirationDate() == null) {
+      stockItem.setExpirationDate(stockItem.getDateObtained().plusDays((int)(Math.random() * 14)));
+    }
     stockItemRepository.save(stockItem);
     stock.addStockItem(stockItem);
     return stock;
