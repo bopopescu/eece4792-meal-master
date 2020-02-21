@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import java.time.LocalDate;
 import java.util.*;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,13 +22,11 @@ public class FoodStock {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @OneToMany (mappedBy = "foodStock")
+  @OneToMany(mappedBy = "foodStock")
   private Set<StockItem> stockItems = new HashSet<>();
 
   @ManyToOne
   @JoinColumn(name = "food_id")
-  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-  @JsonIdentityReference(alwaysAsId = true)
   private GenericFood food;
 
   public GenericFood getFood() {
@@ -85,12 +85,28 @@ public class FoodStock {
     return totalQuantity;
   }
 
+  @Transient
+  public String getFoodName() {
+    return this.getFood().getName();
+  }
+
   /**
    * Retrieves the quantity in grams that is required for this foodstock
    */
   @Transient
   public double getQuantityInGrams() {
     return this.getTotalQuantity() * this.food.getGramsPerServing();
+  }
+
+  @Transient
+  public LocalDate getNextExpiration() {
+    LocalDate nextExpiration = null;
+    for (StockItem stockItem : stockItems) {
+      nextExpiration = nextExpiration == null
+              || nextExpiration.compareTo(stockItem.getExpirationDate()) > 0
+              ? stockItem.getExpirationDate() : nextExpiration;
+    }
+    return nextExpiration;
   }
 
   @Override
