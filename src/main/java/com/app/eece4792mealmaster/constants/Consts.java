@@ -12,7 +12,7 @@ public final class Consts {
 
     private static final class RecipeConsts {
         private RecipeConsts() {}
-        static final String[] PATCHABLE_FIELDS = {"ingredients", "instructions", "descriptions", "yield", "tags"};
+        static final String[] PATCHABLE_FIELDS = {"recipeIngredients", "instructions", "descriptions", "yield", "tags", "cookTime"};
     }
 
     public static final class SessionConsts {
@@ -27,7 +27,7 @@ public final class Consts {
 
     private static final class StockConsts {
         private StockConsts() {}
-        static final String[] STOCK_ITEM_PATCHABLE_FIELDS = { "location", "dateObtained", "expirationDate", "quantity" };
+        static final String[] PATCHABLE_FIELDS = { "location", "dateObtained", "expirationDate", "quantity" };
     }
 
 
@@ -38,6 +38,7 @@ public final class Consts {
         Map<String, String[]> patchableFields = new HashMap<>();
         patchableFields.put("Recipe", RecipeConsts.PATCHABLE_FIELDS);
         patchableFields.put("User", UserConsts.PATCHABLE_FIELDS);
+        patchableFields.put("StockItem", StockConsts.PATCHABLE_FIELDS);
 
         PATCHABLE_FIELDS = Collections.unmodifiableMap(patchableFields);
     }

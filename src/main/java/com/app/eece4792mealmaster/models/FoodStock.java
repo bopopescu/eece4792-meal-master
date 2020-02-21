@@ -2,6 +2,8 @@ package com.app.eece4792mealmaster.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -9,8 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -22,16 +24,16 @@ public class FoodStock {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @JsonIgnore
   @ManyToOne
-  @MapsId("userId")
+  @JoinColumn(name = "user_id")
   private User user;
 
-  @JsonIgnore
-  @OneToMany (mappedBy = "foodStock")
-  private Set<StockItem> stockItems;
+  @OneToMany(mappedBy = "foodStock")
+  private Set<StockItem> stockItems = new HashSet<>();
 
   @ManyToOne
-  @MapsId("foodId")
+  @JoinColumn(name = "food_id")
   private GenericFood food;
 
   public GenericFood getFood() {
@@ -90,12 +92,28 @@ public class FoodStock {
     return totalQuantity;
   }
 
+  @Transient
+  public String getFoodName() {
+    return this.getFood().getName();
+  }
+
   /**
    * Retrieves the quantity in grams that is required for this foodstock
    */
   @Transient
   public double getQuantityInGrams() {
     return this.getTotalQuantity() * this.food.getGramsPerServing();
+  }
+
+  @Transient
+  public LocalDate getNextExpiration() {
+    LocalDate nextExpiration = null;
+    for (StockItem stockItem : stockItems) {
+      nextExpiration = nextExpiration == null
+              || nextExpiration.compareTo(stockItem.getExpirationDate()) > 0
+              ? stockItem.getExpirationDate() : nextExpiration;
+    }
+    return nextExpiration;
   }
 
   @Override

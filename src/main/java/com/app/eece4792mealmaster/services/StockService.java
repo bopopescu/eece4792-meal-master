@@ -9,6 +9,8 @@ import com.app.eece4792mealmaster.repositories.GenericFoodRepository;
 import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.Utils;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,10 @@ public class StockService {
     return oFoodStock.orElse(null);
   }
 
+  public FoodStock getFoodStockByFood(Long userId, Long foodId) {
+    return foodStockRepository.findStockByFood(userId, foodId);
+  }
+
   public Collection<FoodStock> getStockByUser(Long userId) {
     Optional<User> oUser = userRepository.findById(userId);
     return oUser.<Collection<FoodStock>>map(User::getFoodStocks).orElse(null);
@@ -52,16 +58,8 @@ public class StockService {
     return oStockItem.orElse(null);
   }
 
-  // DO NOT USE
-//  public FoodStock addToStock(Long foodStockId, StockItem stockItem) {
-//    FoodStock updatedStock = this.getFoodStockById(foodStockId);
-//    if (updatedStock == null) return updatedStock;
-//    updatedStock.addStockItem(stockItem);
-//    foodStockRepository.save(updatedStock);
-//    return updatedStock;
-//  }
-
   public FoodStock addToStock(Long foodId, StockItem stockItem, Long userId) {
+    
     FoodStock stock = foodStockRepository.findStockByFood(userId, foodId);
     if (stock == null) {
       stock = new FoodStock();
@@ -70,9 +68,17 @@ public class StockService {
       if (food == null || user == null) return null;
       stock.setFood(food);
       stock.setUser(user);
+
     }
-    stock.addStockItem(stockItem);
     foodStockRepository.save(stock);
+
+    stockItem.setFoodStock(stock);
+    stockItem.setDateObtained(LocalDate.now());
+    if (stockItem.getExpirationDate() == null) {
+      stockItem.setExpirationDate(stockItem.getDateObtained().plusDays((int)(Math.random() * 14)));
+    }
+    stockItemRepository.save(stockItem);
+    stock.addStockItem(stockItem);
     return stock;
   }
 

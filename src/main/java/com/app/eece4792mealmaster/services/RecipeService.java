@@ -71,11 +71,15 @@ public class RecipeService {
   }
 
   public RecipeDto updateRecipe(RecipeDto recipeData) {
-    Recipe newRecipe = recipeRepository.findById(recipeData.getId()).orElse(null);
-    if (newRecipe == null) return null;
-    Utils.updateModel(newRecipe, recipeData);
-    recipeRepository.save(newRecipe);
-    return convertToDto(newRecipe);
+    Recipe recipeToUpdate = recipeRepository.findById(recipeData.getId()).orElse(null);
+    if (recipeToUpdate == null) return null;
+    try {
+      Utils.updateModel(recipeToUpdate, convertToEntity(recipeData));
+    }
+    catch(ParseException e) { return null; } // do we want to return existing recipe or null?
+
+    recipeRepository.save(recipeToUpdate);
+    return convertToDto(recipeToUpdate);
   }
 
   public RecipeDto findById(Long recipeId) {
@@ -102,9 +106,10 @@ public class RecipeService {
 
   public RecipeDto convertToDto(Recipe recipe, boolean fetchRecipes) {
     if (recipe == null) return null;
-    modelMapper.typeMap(Recipe.class, RecipeDto.class).addMappings(mapper -> mapper.skip(RecipeDto::setIngredients));
-    modelMapper.typeMap(Recipe.class, RecipeDto.class).addMapping(src -> src.getCreator().getId(), RecipeDto::setCreator);
-    RecipeDto recipeDto = modelMapper.map(recipe, RecipeDto.class);
+    // modelMapper.typeMap(Recipe.class, RecipeDto.class).addMappings(mapper -> mapper.skip(RecipeDto::setIngredients));
+    // modelMapper.typeMap(Recipe.class, RecipeDto.class).addMapping(src -> src.getCreator().getId(), RecipeDto::setCreator);
+    // RecipeDto recipeDto = modelMapper.map(recipe, RecipeDto.class);
+    RecipeDto recipeDto = new RecipeDto(recipe);
     recipeDto.setFormattedCreateDate(recipe.getCreateDate());
     if (fetchRecipes) {
       List<RecipeIngredientDto> ingredientsDto = new ArrayList<>();
@@ -121,10 +126,13 @@ public class RecipeService {
 
   public Recipe convertToEntity(RecipeDto recipeDto) throws ParseException {
     if (recipeDto == null) return null;
-    if (!userRepository.findById(recipeDto.getCreator()).isPresent()) return null;
-    modelMapper.typeMap(RecipeDto.class, Recipe.class).addMapping(src -> userRepository.findById(src.getCreator()), Recipe::setCreator);
-    Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
-    recipe.setCreateDate(recipeDto.getCreateDate());
+    Optional<User> oCreator = userRepository.findById(recipeDto.getCreator());
+    if (!oCreator.isPresent()) return null;
+    // modelMapper.typeMap(RecipeDto.class, Recipe.class).addMappings(mapper -> mapper.skip(Recipe::setCreator));
+    // Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
+    Recipe recipe = new Recipe(recipeDto);
+    if (recipeDto.getFormattedCreateDate() != null) recipe.setCreateDate(recipeDto.getCreateDate());
+    recipe.setCreator(oCreator.get());
     for (RecipeIngredientDto ingredientDto : recipeDto.getIngredients()) {
       if (!(ingredientDto.getIngredient() == null || ingredientDto.getServings() == null)) {
         Optional<GenericFood> oIngredient = genericFoodRepository.findById(ingredientDto.getIngredient());

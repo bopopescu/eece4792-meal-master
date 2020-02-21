@@ -21,9 +21,9 @@ public class GenericFood {
 
   private String name;
 
-  private int averageExpirationDurations;
+  private Integer averageExpirationDurations;
 
-  private double gramsPerServing;
+  private Double gramsPerServing;
 
   @JsonIgnore
   @OneToMany (mappedBy = "genericClassification")
@@ -52,7 +52,7 @@ public class GenericFood {
     this.name = name;
   }
 
-  public int getAverageExpirationDurations() {
+  public Integer getAverageExpirationDurations() {
     return averageExpirationDurations;
   }
 
@@ -60,11 +60,11 @@ public class GenericFood {
     this.averageExpirationDurations = averageExpirationDurations;
   }
 
-  public double getGramsPerServing() {
+  public Double getGramsPerServing() {
     return gramsPerServing;
   }
 
-  public void setGramsPerServing(double gramsPerServing) {
+  public void setGramsPerServing(Double gramsPerServing) {
     this.gramsPerServing = gramsPerServing;
   }
 
