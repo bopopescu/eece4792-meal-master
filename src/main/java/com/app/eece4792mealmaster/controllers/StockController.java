@@ -63,7 +63,7 @@ public class StockController {
     return new ApiResponse(stockService.getStockItemById(stockItemId));
   }
 
-  @PostMapping("/api/stock/food/{foodId}")// STOCK_ITEM_API + FOOD + VAR_FOOD_ID)
+  @PostMapping(STOCK_ITEM_API + FOOD + VAR_FOOD_ID)
   public ApiResponse addToStock(HttpSession session, @PathVariable(FOOD_ID) Long foodId, @RequestBody StockItem payload) {
     Long userId = Utils.getLoggedInUser(session);
     if (userId == null) {
