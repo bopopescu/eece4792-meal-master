@@ -21,6 +21,10 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private Set<Recipe> taggedRecipes;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "tags")
+    private Set<GenericFood> taggedGenericFoods;
+
     public Long getId() {
         return id;
     }
