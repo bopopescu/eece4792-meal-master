@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Transactional
@@ -22,6 +23,6 @@ public class GenericFoodService {
   }
 
   public Collection<GenericFood> getGenericFoodByName(String genericFoodName) {
-    return genericFoodName.equals("") ? new ArrayList<>() : genericFoodRepository.searchGenericFood(genericFoodName);
+    return genericFoodName.equals("") ? new ArrayList<>() : genericFoodRepository.searchGenericFood(genericFoodName, PageRequest.of(0, 50));
   }
 }
