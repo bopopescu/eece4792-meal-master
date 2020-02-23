@@ -18,6 +18,7 @@ import com.app.eece4792mealmaster.repositories.GenericFoodRepository;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -51,7 +52,8 @@ public class RecipeService {
   private ModelMapper modelMapper;
 
   public Collection<RecipeDto> searchRecipes(String searchTerms) {
-    return searchTerms.equals("") ? new ArrayList<>() : convertToDtoCollection(recipeRepository.searchRecipes(searchTerms));
+    return searchTerms.equals("") ? new ArrayList<>() : convertToDtoCollection(recipeRepository.searchRecipes(searchTerms,
+        PageRequest.of(0, 50)));
   }
 
   public Collection<RecipeDto> getRecipeByUser(Long userId) {
