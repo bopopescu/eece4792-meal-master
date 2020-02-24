@@ -29,7 +29,6 @@ public class Recipe {
     {
         id = recipe.getId();
         creator = recipe.getCreator();
-
     }
 
     @Id
@@ -110,7 +109,8 @@ public class Recipe {
     }
 
     public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
-        this.recipeIngredients = recipeIngredients;
+        this.recipeIngredients.clear();
+        this.recipeIngredients.addAll(recipeIngredients);
     }
 
     public String getInstructions() {
