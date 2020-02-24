@@ -121,7 +121,7 @@ def from_azure(azure_input):
 		if (' '.join(re_str)) in matching:
 			matching.insert(0, matching.pop(matching.index((' '.join(re_str))))) 
 
-		print(matching[0])
+		# print(matching[0])
 		food_ids.append(GENERIC_FOOD_DICT[matching[0]])
 	print(food_ids)
 

@@ -67,7 +67,7 @@ public class StockController {
 		return new ApiResponse(stockService.getStockItemById(stockItemId));
 	}
 
-	@PostMapping("/021")
+	@PostMapping(AZURE)
 	public ApiResponse receiptStock(HttpSession session, @RequestBody String imgUrl) throws IOException {
 		Long userId = Utils.getLoggedInUser(session);
 		if (userId == null) {
@@ -79,7 +79,9 @@ public class StockController {
 		imgUrl = "https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg";
 
 		// https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg
-		String text = "eece4792-meal-master/src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
+		String text = "src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
+		final String dir = System.getProperty("user.dir");
+        System.out.println("current dir = " + dir);
 		Process p = Runtime.getRuntime().exec(text);
 		BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		String pyString = input.readLine(); 
