@@ -70,6 +70,7 @@ public class StockController {
 	@PostMapping(AZURE)
 	public ApiResponse receiptStock(HttpSession session, @RequestBody String imgUrl) throws IOException {
 		Long userId = Utils.getLoggedInUser(session);
+		System.out.println(imgUrl);
 		if (userId == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
@@ -79,17 +80,25 @@ public class StockController {
 		imgUrl = "https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg";
 
 		// https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg
-		String text = "src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
+		String text = new String();
+		if(System.getProperty("os.name").toLowerCase().contains("win"))
+			text = "src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
+		else
+			text = "src/text-recognition/dist/parse-receipt/parse-receipt --image_path "+imgUrl;
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
 		Process p = Runtime.getRuntime().exec(text);
 		BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		String pyString = input.readLine(); 
+		String id_list = new String();
 		while ((pyString = input.readLine()) != null) {
 			// print the line.
 			System.out.println(pyString);
+			id_list = pyString;
 		}
-		return new ApiResponse(pyString);
+		System.out.println(id_list);
+
+		return new ApiResponse(id_list);
 	}
 
 	@PostMapping(STOCK_ITEM_API + FOOD + VAR_FOOD_ID)
