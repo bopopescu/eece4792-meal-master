@@ -10,7 +10,10 @@ import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.Utils;
 
+import java.util.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,11 +75,18 @@ public class StockService {
     }
     foodStockRepository.save(stock);
 
+    Date today = new Date();
     stockItem.setFoodStock(stock);
-    stockItem.setDateObtained(LocalDate.now());
+    stockItem.setDateObtained(today);
+
     if (stockItem.getExpirationDate() == null) {
-      stockItem.setExpirationDate(stockItem.getDateObtained().plusDays((int)(Math.random() * 14)));
+      LocalDateTime obtainedLocalDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+      LocalDateTime expirationLocalDate = obtainedLocalDate.plusDays((int)(Math.random() * 14));
+      Date expirationDate = Date.from(expirationLocalDate.atZone(ZoneId.systemDefault()).toInstant());
+
+      stockItem.setExpirationDate(expirationDate);
     }
+
     stockItemRepository.save(stockItem);
     stock.addStockItem(stockItem);
     return stock;

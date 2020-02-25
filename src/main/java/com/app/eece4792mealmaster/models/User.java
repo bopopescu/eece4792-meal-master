@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +37,7 @@ public class User {
   private String email;
 
   @JsonView(Views.Internal.class)
-  private LocalDate dob;
+  private Date dob;
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @Column(nullable=false)
   private String password;
@@ -150,11 +149,11 @@ public class User {
     this.following = following;
   }
 
-  public LocalDate getDob() {
+  public Date getDob() {
     return dob;
   }
 
-  public void setDob(LocalDate dob) {
+  public void setDob(Date dob) {
     this.dob = dob;
   }
 
