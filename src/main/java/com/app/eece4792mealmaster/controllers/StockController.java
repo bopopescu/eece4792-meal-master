@@ -85,7 +85,7 @@ public class StockController {
 		if(System.getProperty("os.name").toLowerCase().contains("win"))
 			text = "src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
 		else
-			text = "src/text-recognition/dist/parse-receipt/parse-receipt --image_path "+imgUrl;
+			text = "src/text-recognition/dist/parse-receipt_ub/parse-receipt --image_path "+imgUrl;
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
 		Process p = Runtime.getRuntime().exec(text);
