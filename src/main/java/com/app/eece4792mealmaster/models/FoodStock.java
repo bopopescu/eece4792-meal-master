@@ -2,7 +2,7 @@ package com.app.eece4792mealmaster.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -106,8 +106,8 @@ public class FoodStock {
   }
 
   @Transient
-  public LocalDate getNextExpiration() {
-    LocalDate nextExpiration = null;
+  public Date getNextExpiration() {
+    Date nextExpiration = null;
     for (StockItem stockItem : stockItems) {
       nextExpiration = nextExpiration == null
               || nextExpiration.compareTo(stockItem.getExpirationDate()) > 0

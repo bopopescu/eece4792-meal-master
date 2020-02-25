@@ -2,8 +2,7 @@ package com.app.eece4792mealmaster.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
 
@@ -21,9 +20,9 @@ public class StockItem {
 
   private String location;
 
-  private LocalDate dateObtained;
+  private Date dateObtained;
 
-  private LocalDate expirationDate;
+  private Date expirationDate;
 
   private Double quantity;
 
@@ -53,19 +52,19 @@ public class StockItem {
     this.location = location;
   }
 
-  public LocalDate getDateObtained() {
+  public Date getDateObtained() {
     return dateObtained;
   }
 
-  public void setDateObtained(LocalDate dateObtained) {
+  public void setDateObtained(Date dateObtained) {
     this.dateObtained = dateObtained;
   }
 
-  public LocalDate getExpirationDate() {
+  public Date getExpirationDate() {
     return expirationDate;
   }
 
-  public void setExpirationDate(LocalDate expirationDate) {
+  public void setExpirationDate(Date expirationDate) {
     this.expirationDate = expirationDate;
   }
 
