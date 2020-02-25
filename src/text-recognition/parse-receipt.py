@@ -6,11 +6,16 @@ from PIL import Image
 import pprint
 import argparse
 import re
-
+from process import from_azure
 RECEIPT_NON_FOODS = ["CRV", "BAG FEE", "CREW MEMBER DISCOUNT", "GROCERY NON TAXABLE", "CANVAS BAG"]
 
 def get_azure_settings():
-    return json.loads(open('settings.json', 'r').read())['azure']
+    azure = {
+        "key": "955a8ee27fab47eab18b79a6f8f45a32",
+        "endpoint": "https://teamw4-image-processing.cognitiveservices.azure.com/vision/v2.0/",
+        "text recognition": "read/core/asyncBatchAnalyze"
+    }
+    return azure
 
 def process_image_response(headers, response):
     # Process the response
@@ -118,11 +123,5 @@ if __name__ == "__main__":
 
     path = args.image_path
     use_url = args.use_url
+    from_azure(parse_foods(request_from_url(path)))
 
-    print("Parsed Foods:")
-
-    if (use_url):
-        print(parse_foods(request_from_url(path)))
-    else:
-        print(parse_foods(request_from_local(path)))
-    input("Press Enter to continue...")
