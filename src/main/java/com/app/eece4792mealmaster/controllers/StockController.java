@@ -69,6 +69,7 @@ public class StockController {
 
 	@PostMapping(AZURE)
 	public ApiResponse receiptStock(HttpSession session, @RequestBody String imgUrl) throws IOException {
+		// Takes url in body, returns food id's in body as list ex: [21, 38, 2113, 321]
 		Long userId = Utils.getLoggedInUser(session);
 		System.out.println(imgUrl);
 		if (userId == null) {
