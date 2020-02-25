@@ -85,7 +85,7 @@ public class StockController {
 		if(System.getProperty("os.name").toLowerCase().contains("win"))
 			text = "src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
 		else
-			text = "src/text-recognition/dist/parse-receipt_ub/parse-receipt --image_path "+imgUrl;
+			text = "src/text-recognition/dist/parse-receipt-ub/parse-receipt --image_path "+imgUrl;
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
 		Process p = Runtime.getRuntime().exec(text);
@@ -97,9 +97,19 @@ public class StockController {
 			System.out.println(pyString);
 			id_list = pyString;
 		}
-		System.out.println(id_list);
 
-		return new ApiResponse(id_list);
+		String[] items = id_list.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+
+		int[] results = new int[items.length];
+		
+		for (int i = 0; i < items.length; i++) {
+			try {
+				results[i] = Integer.parseInt(items[i]);
+			} catch (NumberFormatException nfe) {
+			};
+		}
+
+		return new ApiResponse(results);
 	}
 
 	@PostMapping(STOCK_ITEM_API + FOOD + VAR_FOOD_ID)

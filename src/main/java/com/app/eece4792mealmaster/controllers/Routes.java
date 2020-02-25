@@ -48,5 +48,5 @@ final class Routes {
   static final String FOOD_API = API + FOOD;
 
   // Azure Route
-  static final String AZURE = "/azure";
+  static final String AZURE = API + "/azure";
 }
