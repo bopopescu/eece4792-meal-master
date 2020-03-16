@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.text.ParseException;
@@ -94,6 +95,10 @@ public class RecipeService {
     return toDelete.isPresent();
   }
 
+  public Collection<RecipeDto> getRecipeRecs(Long userId) {
+    return convertToDtoCollection(recipeRepository.findRecipeRecs(userId, PageRequest.of(0, 6)));
+  }
+
   private Collection<RecipeDto> convertToDtoCollection(Collection<Recipe> recipes) {
     ArrayList<RecipeDto> ans = new ArrayList<>();
     for (Recipe recipe : recipes) {
@@ -148,25 +153,27 @@ public class RecipeService {
    * Determines if this recipe this can be made
    */
   public boolean canRecipeBeMade(Recipe recipe, User user) {
-      Map<GenericFood, Double> ingredientsAndServings = recipe.getRecipeIngredients().stream()
-          .collect(Collectors.toMap(
-              RecipeIngredient::getIngredient,
-              RecipeIngredient::getServings)
-          );
+    Map<GenericFood, Double> ingredientsAndServings = recipe.getRecipeIngredients().stream()
+            .collect(Collectors.toMap(
+                    RecipeIngredient::getIngredient,
+                    RecipeIngredient::getServings)
+            );
 
-      Collection<FoodStock> foodStocks = foodStockRepository.getBulkFoodStockByGenericFood(ingredientsAndServings.keySet(), user);
-      Map<GenericFood, FoodStock> foodStockByGenericFoodId = foodStocks.stream().collect(
-          Collectors.toMap(FoodStock::getFood, Function.identity()));
+    Collection<FoodStock> foodStocks = user.getFoodStocks();
+    Map<GenericFood, FoodStock> foodStockByGenericFoodId = foodStocks.stream().collect(
+            Collectors.toMap(FoodStock::getFood, Function.identity()));
 
-      for(Map.Entry<GenericFood, FoodStock> entry : foodStockByGenericFoodId.entrySet()) {
-          FoodStock currentIngredient = entry.getValue();
-          double availableServings = currentIngredient.getTotalQuantity();
-          GenericFood genericFood = entry.getKey();
-          // if the amount that we need is more than what we have, return false
-          if (ingredientsAndServings.get(genericFood) > availableServings) {
-              return false;
-          }
+    for(Map.Entry<GenericFood, Double> entry : ingredientsAndServings.entrySet()) {
+      GenericFood genericFood = entry.getKey();
+      if (!foodStockByGenericFoodId.containsKey(genericFood)) {
+        return false;
       }
-      return true;
+      double availableServings = foodStockByGenericFoodId.get(genericFood).getTotalQuantity();
+      // if the amount that we need is more than what we have, return false
+      if (ingredientsAndServings.get(genericFood) > availableServings) {
+        return false;
+      }
     }
+    return true;
+  }
 }

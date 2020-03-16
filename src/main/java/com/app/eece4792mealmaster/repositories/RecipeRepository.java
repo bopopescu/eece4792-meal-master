@@ -15,4 +15,10 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
             "WHERE recipe.name LIKE :searchTerms%"
     )
     public List<Recipe> searchRecipes(@Param("searchTerms") String searchTerms, Pageable pageable);
+
+    @Query("SELECT recipe " +
+            "FROM Recipe recipe " +
+            "WHERE function('recipeCanBeMade', :userId, recipe.id) >= 1"
+    )
+    public List<Recipe> findRecipeRecs(@Param("userId") Long userId, Pageable pageable);
 }
