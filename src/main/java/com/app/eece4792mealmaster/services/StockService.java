@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 
 import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,6 +108,10 @@ public class StockService {
     Optional<StockItem> toDelete = stockItemRepository.findById(stockItemId);
     toDelete.ifPresent(stockItem -> stockItemRepository.delete(stockItem));
     return toDelete.isPresent();
+  }
+
+  public void deleteStockItems(Set<Long> stockItemIds) {
+    stockItemRepository.deleteStockItems(stockItemIds);
   }
 
   public boolean deleteFoodStock(Long foodStockId) {

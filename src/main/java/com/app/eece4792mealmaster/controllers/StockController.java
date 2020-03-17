@@ -2,6 +2,7 @@ package com.app.eece4792mealmaster.controllers;
 
 import static com.app.eece4792mealmaster.controllers.Routes.*;
 
+import com.app.eece4792mealmaster.models.FoodStock;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
@@ -11,6 +12,8 @@ import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.app.eece4792mealmaster.services.StockService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 
 import com.app.eece4792mealmaster.utils.Utils;
@@ -147,6 +150,14 @@ public class StockController {
 		Long userId = Utils.getLoggedInUser(session);
 		if (userId == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+		}
+		FoodStock foodStock = stockService.getFoodStockById(foodStockId);
+		Set<StockItem> stockItems = foodStock.getStockItems();
+		Set<Long> stockItemIds = stockItems.stream().map(StockItem::getId).collect(Collectors.toSet());
+		try {
+			stockService.deleteStockItems(stockItemIds);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 		if (!stockService.deleteFoodStock(foodStockId)) {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
