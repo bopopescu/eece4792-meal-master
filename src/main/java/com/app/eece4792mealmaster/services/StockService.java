@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 
+import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,8 @@ public class StockService {
   }
 
   public FoodStock getFoodStockByFood(Long userId, Long foodId) {
-    return foodStockRepository.findStockByFood(userId, foodId);
+    FoodStock foodStock = foodStockRepository.findStockByFood(userId, foodId);
+    return foodStock == null ? createBlankFoodStock(foodId) : foodStock;
   }
 
   public Collection<FoodStock> getStockByUser(Long userId) {
@@ -111,4 +113,12 @@ public class StockService {
     return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
   }
 
+  private FoodStock createBlankFoodStock(Long foodId) {
+    Optional<GenericFood> oGenericFood = genericFoodRepository.findById(foodId);
+    GenericFood genericFood = oGenericFood.orElse(null);
+    FoodStock foodStock = new FoodStock();
+    foodStock.setFood(genericFood);
+    foodStock.setStockItems(new HashSet<>());
+    return foodStock;
+  }
 }
