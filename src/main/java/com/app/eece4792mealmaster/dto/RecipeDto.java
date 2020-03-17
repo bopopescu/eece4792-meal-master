@@ -47,6 +47,9 @@ public class RecipeDto {
     private Set<Tag> tags = new HashSet<>();
 
     @JsonView(Views.Detailed.class)
+    private Boolean canBeMade;
+
+    @JsonView(Views.Detailed.class)
     private List<RecipeIngredientDto> ingredients = new ArrayList<>();
 
     public Long getId() {
@@ -131,5 +134,13 @@ public class RecipeDto {
 
     public void setCookTime(Integer cookTime) {
         this.cookTime = cookTime;
+    }
+
+    public Boolean getCanBeMade() {
+        return canBeMade;
+    }
+
+    public void setCanBeMade(Boolean canBeMade) {
+        this.canBeMade = canBeMade;
     }
 }

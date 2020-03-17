@@ -49,4 +49,7 @@ final class Routes {
 
   // Azure Route
   static final String AZURE = API + "/azure";
+
+  // Miscellaneous
+  static final String RECS = "/recommendations";
 }

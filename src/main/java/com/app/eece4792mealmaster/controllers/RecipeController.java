@@ -45,6 +45,16 @@ public class RecipeController {
         return new ApiResponse(recipe);
     }
 
+    @JsonView(Views.Summary.class)
+    @GetMapping(RECIPE_API + RECS)
+    public ApiResponse getRecipeRecommendations(HttpSession session) {
+        Long userId = Utils.getLoggedInUser(session);
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        return new ApiResponse(recipeService.getRecipeRecs(userId));
+    }
+
     @JsonView(Views.Detailed.class)
     @PostMapping(RECIPE_API)
     public ApiResponse createRecipe(HttpSession session, @RequestBody RecipeDto payload) {
