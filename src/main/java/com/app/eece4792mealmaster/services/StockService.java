@@ -48,7 +48,8 @@ public class StockService {
   }
 
   public FoodStock getFoodStockByFood(Long userId, Long foodId) {
-    return foodStockRepository.findStockByFood(userId, foodId);
+    FoodStock foodStock = foodStockRepository.findStockByFood(userId, foodId);
+    return foodStock == null ? new FoodStock() : foodStock;
   }
 
   public Collection<FoodStock> getStockByUser(Long userId) {
@@ -110,5 +111,4 @@ public class StockService {
   public Collection<FoodStock> getFoodStockByName(String foodStockName) {
     return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
   }
-
 }
