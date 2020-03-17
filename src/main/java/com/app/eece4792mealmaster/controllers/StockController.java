@@ -144,10 +144,10 @@ public class StockController {
 
 	@DeleteMapping(STOCK_API + VAR_STOCK_ID)
 	public ApiResponse deleteFoodStock(HttpSession session, @PathVariable(STOCK_ID) Long foodStockId) {
-		//Long userId = Utils.getLoggedInUser(session);
-		//if (userId == null) {
-		//	throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-	//	}
+		Long userId = Utils.getLoggedInUser(session);
+		if (userId == null) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+		}
 		if (!stockService.deleteFoodStock(foodStockId)) {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
