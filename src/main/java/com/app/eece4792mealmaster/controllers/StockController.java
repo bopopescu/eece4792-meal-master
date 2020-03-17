@@ -141,4 +141,16 @@ public class StockController {
 		}
 		return new ApiResponse(String.format("StockItem %d deleted", stockItemId));
 	}
+
+	@DeleteMapping(STOCK_API + VAR_STOCK_ID)
+	public ApiResponse deleteFoodStock(HttpSession session, @PathVariable(STOCK_ID) Long foodStockId) {
+		//Long userId = Utils.getLoggedInUser(session);
+		//if (userId == null) {
+		//	throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+	//	}
+		if (!stockService.deleteFoodStock(foodStockId)) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		return new ApiResponse(String.format("Food stock %d deleted", foodStockId));
+	}
 }

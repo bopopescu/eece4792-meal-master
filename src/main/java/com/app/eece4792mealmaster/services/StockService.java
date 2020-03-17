@@ -109,6 +109,12 @@ public class StockService {
     return toDelete.isPresent();
   }
 
+  public boolean deleteFoodStock(Long foodStockId) {
+    Optional<FoodStock> toDelete = foodStockRepository.findById(foodStockId);
+    toDelete.ifPresent(stockItem -> foodStockRepository.delete(stockItem));
+    return toDelete.isPresent();
+  }
+
   public Collection<FoodStock> getFoodStockByName(String foodStockName) {
     return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
   }
