@@ -1,10 +1,10 @@
 package com.app.eece4792mealmaster.controllers;
 
-import static com.app.eece4792mealmaster.controllers.Routes.FOOD_API;
-import static com.app.eece4792mealmaster.controllers.Routes.FOOD_ID;
-import static com.app.eece4792mealmaster.controllers.Routes.SEARCH;
-import static com.app.eece4792mealmaster.controllers.Routes.SEARCHTERMS;
-import static com.app.eece4792mealmaster.controllers.Routes.VAR_FOOD_ID;
+import static com.app.eece4792mealmaster.constants.Routes.FOOD_API;
+import static com.app.eece4792mealmaster.constants.Routes.FOOD_ID;
+import static com.app.eece4792mealmaster.constants.Routes.SEARCH;
+import static com.app.eece4792mealmaster.constants.Routes.SEARCHTERMS;
+import static com.app.eece4792mealmaster.constants.Routes.VAR_FOOD_ID;
 
 import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
@@ -12,7 +12,6 @@ import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

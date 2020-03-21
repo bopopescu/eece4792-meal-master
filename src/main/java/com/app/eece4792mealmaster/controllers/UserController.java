@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
 
-import static com.app.eece4792mealmaster.controllers.Routes.*;
+import static com.app.eece4792mealmaster.constants.Routes.*;
 
 // TODO: Add EC2 hostname to allowed origins
 @RestController
