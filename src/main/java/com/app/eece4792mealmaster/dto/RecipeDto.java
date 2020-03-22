@@ -1,8 +1,10 @@
 package com.app.eece4792mealmaster.dto;
 
 import com.app.eece4792mealmaster.constants.Consts;
+import com.app.eece4792mealmaster.constants.Routes;
 import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.models.Tag;
+import com.app.eece4792mealmaster.utils.Utils;
 import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -25,6 +27,7 @@ public class RecipeDto {
         cookTime = recipe.getCookTime();
         tags = recipe.getTags();
         creator = recipe.getCreator().getId();
+        image = Utils.imageUrlBuilder(recipe.getId(), Routes.RECIPE);
     }
 
     private Long id;
@@ -43,6 +46,8 @@ public class RecipeDto {
     private Integer yield;
 
     private Integer cookTime;
+
+    private String image;
 
     private Set<Tag> tags = new HashSet<>();
 
@@ -134,6 +139,14 @@ public class RecipeDto {
 
     public void setCookTime(Integer cookTime) {
         this.cookTime = cookTime;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Boolean getCanBeMade() {

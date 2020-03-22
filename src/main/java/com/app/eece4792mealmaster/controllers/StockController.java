@@ -1,6 +1,6 @@
 package com.app.eece4792mealmaster.controllers;
 
-import static com.app.eece4792mealmaster.controllers.Routes.*;
+import static com.app.eece4792mealmaster.constants.Routes.*;
 
 import com.app.eece4792mealmaster.models.FoodStock;
 import java.io.IOException;

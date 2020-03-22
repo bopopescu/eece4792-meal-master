@@ -1,7 +1,7 @@
 package com.app.eece4792mealmaster.utils;
 
 import com.app.eece4792mealmaster.constants.Consts;
-import com.app.eece4792mealmaster.dto.RecipeDto;
+import com.app.eece4792mealmaster.constants.Routes;
 
 import java.lang.reflect.Method;
 
@@ -47,5 +47,9 @@ public final class Utils {
 
     public static Long getLoggedInUser(javax.servlet.http.HttpSession session) {
         return (Long)(session.getAttribute(Consts.SessionConsts.USER_ID));
+    }
+
+    public static String imageUrlBuilder(Long id, String folder) {
+        return String.format("%s%s/%d%s", Routes.S3_URL, folder, id, Routes.S3_IMG_EXT);
     }
 }

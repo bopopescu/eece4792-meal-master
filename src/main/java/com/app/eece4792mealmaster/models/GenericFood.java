@@ -1,21 +1,14 @@
 package com.app.eece4792mealmaster.models;
 
+import com.app.eece4792mealmaster.constants.Routes;
 import com.app.eece4792mealmaster.models.products.Product;
+import com.app.eece4792mealmaster.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "genericFoods")
@@ -49,6 +42,11 @@ public class GenericFood {
   @JsonIgnore
   @OneToMany (mappedBy = "food")
   private Set<FoodStock> stocks;
+
+  @Transient
+  public String getImage() {
+    return Utils.imageUrlBuilder(id, Routes.FOOD);
+  }
 
   public Long getId() {
     return id;
