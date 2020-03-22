@@ -89,7 +89,7 @@ public class StockController {
 			text = "eece4792-meal-master/src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
 			// text = "src\\text-recognition\\dist\\parse-receipt\\parse-receipt.exe --image_path "+imgUrl;
 		else
-			text = "src/text-recognition/dist/parse-receipt-ub/parse-receipt --image_path "+imgUrl;
+			text = "src/text-recognition/dist/parse-receipt-ub/parse-receipt-ub --image_path "+imgUrl;
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
 
