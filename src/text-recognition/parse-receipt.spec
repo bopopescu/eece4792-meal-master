@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['parse-receipt.py'],
-             pathex=['C:\\Users\\elseh\\OneDrive\\_Programming\\_Repositories\\Meal_Master\\eece4792-meal-master\\src\\text-recognition'],
+             pathex=['C:\\Users\\elseh\\Desktop\\Capstone\\text-recognition'],
              binaries=[],
              datas=[],
              hiddenimports=[],

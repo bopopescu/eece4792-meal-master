@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['parse-receipt-ub.py'],
-             pathex=['/mnt/c/Users/elseh/desktop/capstone/eece4792-meal-master/src/text-recognition'],
+             pathex=['/mnt/c/Users/elseh/desktop/capstone/text-recognition'],
              binaries=[],
              datas=[],
              hiddenimports=[],
