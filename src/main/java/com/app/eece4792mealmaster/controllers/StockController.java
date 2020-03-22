@@ -86,21 +86,46 @@ public class StockController {
 		// https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg
 		String text = new String();
 		if(System.getProperty("os.name").toLowerCase().contains("win"))
-			text = "src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
+			text = "eece4792-meal-master/src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
+			// text = "src\\text-recognition\\dist\\parse-receipt\\parse-receipt.exe --image_path "+imgUrl;
 		else
 			text = "src/text-recognition/dist/parse-receipt-ub/parse-receipt --image_path "+imgUrl;
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
+
 		Process p = Runtime.getRuntime().exec(text);
+
+		// =======================================================================================================================
+		// Process proc = Runtime.getRuntime().exec(text);		
+		// BufferedReader stdInput = new BufferedReader(new 
+		// InputStreamReader(proc.getInputStream()));
+
+		// BufferedReader stdError = new BufferedReader(new 
+		// 	InputStreamReader(proc.getErrorStream()));
+
+		// Read the output from the command
+		// System.out.println("Here is the standard output of the command:\n");
+		// String s = null;
+		// while ((s = stdInput.readLine()) != null) {
+		// 	System.out.println(s);
+		// }
+
+		// // Read any errors from the attempted command
+		// System.out.println("Here is the standard error of the command (if any):\n");
+		// while ((s = stdError.readLine()) != null) {
+		// 	System.out.println(s);
+		// }
+		// =======================================================================================================================
 		BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		String pyString = input.readLine(); 
+		String pyString = null; 
 		String id_list = new String();
 		while ((pyString = input.readLine()) != null) {
 			// print the line.
-			System.out.println(pyString);
+			System.out.println("pyString = "+pyString);
 			id_list = pyString;
 		}
-
+		System.out.println(pyString);
+		// =======================================================================================================================
 		String[] items = id_list.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 
 		int[] results = new int[items.length];
