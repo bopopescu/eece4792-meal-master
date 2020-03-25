@@ -74,7 +74,7 @@ public class StockController {
 	public ApiResponse receiptStock(HttpSession session, @RequestBody String imgUrl) throws IOException {
 		// Takes url in body, returns food id's in body as list ex: [21, 38, 2113, 321]
 		Long userId = Utils.getLoggedInUser(session);
-		System.out.println(imgUrl);
+
 		if (userId == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
@@ -83,13 +83,16 @@ public class StockController {
 		}
 		imgUrl = "https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg";
 
-		// https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg
 		String text = new String();
-		if(System.getProperty("os.name").toLowerCase().contains("win"))
+		if(System.getProperty("os.name").toLowerCase().contains("win")) {
 			text = "eece4792-meal-master/src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
-		else
-        System.out.println("current dir = " + dir);
+		} else {
+			text = "text-recognition/dist/parse-receipt-ub/parse-receipt --image_path "+imgUrl;
+			final String dir = System.getProperty("user.dir");
+			System.out.println("current dir = " + dir);
+		}
 
+		Process p = Runtime.getRuntime().exec(text);
 
 		// =======================================================================================================================
 		// Process proc = Runtime.getRuntime().exec(text);		
@@ -112,16 +115,14 @@ public class StockController {
 		// 	System.out.println(s);
 		// }
 		// =======================================================================================================================
+
 		BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		String pyString = null; 
 		String id_list = new String();
 		while ((pyString = input.readLine()) != null) {
-			// print the line.
-			System.out.println("pyString = "+pyString);
 			id_list = pyString;
 		}
-		System.out.println(pyString);
-		// =======================================================================================================================
+
 		String[] items = id_list.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 
 		int[] results = new int[items.length];
