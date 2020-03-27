@@ -36,6 +36,7 @@ public final class Routes {
   // Recipe Routes
   public static final String RECIPE = "/recipe";
   public static final String RECIPE_API = API + RECIPE;
+  public static final String LIKE = "/likes";
 
   // Query Params
   public static final String SEARCH = "/search";

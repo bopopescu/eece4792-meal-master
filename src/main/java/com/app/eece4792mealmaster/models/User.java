@@ -58,7 +58,7 @@ public class User {
   private Set<User> following = new HashSet<>();
 
   @JsonIgnore
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
           name = "user_saved_recipes",
           joinColumns = @JoinColumn(name = "user_id"),
@@ -82,6 +82,14 @@ public class User {
   public void follow(User user) {
     this.following.add(user);
     user.getFollowers().add(this);
+  }
+
+  public void saveRecipe(Recipe recipe) {
+    this.savedRecipes.add(recipe);
+  }
+
+  public void unsaveRecipe(Recipe recipe) {
+    this.savedRecipes.remove(recipe);
   }
 
   // Getters and Setters

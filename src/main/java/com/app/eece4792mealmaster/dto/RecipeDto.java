@@ -28,6 +28,7 @@ public class RecipeDto {
         tags = recipe.getTags();
         creator = recipe.getCreator().getId();
         image = Utils.imageUrlBuilder(recipe.getId(), Routes.RECIPE);
+        likes = recipe.getSavedByUsers().size();
     }
 
     private Long id;
@@ -50,6 +51,8 @@ public class RecipeDto {
     private String image;
 
     private Set<Tag> tags = new HashSet<>();
+
+    private Integer likes;
 
     @JsonView(Views.Detailed.class)
     private Boolean canBeMade;
@@ -155,5 +158,13 @@ public class RecipeDto {
 
     public void setCanBeMade(Boolean canBeMade) {
         this.canBeMade = canBeMade;
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
     }
 }
