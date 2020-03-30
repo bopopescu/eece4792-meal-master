@@ -40,12 +40,6 @@ public class RecipeService {
   private UserRepository userRepository;
 
   @Autowired
-  private FoodStockRepository foodStockRepository;
-
-  @Autowired
-  private StockService stockService;
-
-  @Autowired
   private GenericFoodRepository genericFoodRepository;
 
 
@@ -97,6 +91,33 @@ public class RecipeService {
 
   public Collection<RecipeDto> getRecipeRecs(Long userId) {
     return convertToDtoCollection(recipeRepository.findRecipeRecs(userId, PageRequest.of(0, 6)));
+  }
+
+  public Collection<RecipeDto> getUserLikedRecipes(Long userId) {
+    Optional<User> oUser = userRepository.findById(userId);
+    return oUser.map(user -> convertToDtoCollection(user.getSavedRecipes())).orElse(null);
+  }
+
+  public Collection<RecipeDto> likeRecipe(Long userId, Long recipeId) {
+    Optional<User> oUser = userRepository.findById(userId);
+    Optional<Recipe> oRecipe = recipeRepository.findById(recipeId);
+    if (!oUser.isPresent() || !oRecipe.isPresent()) {
+      return null;
+    }
+    User user = oUser.get();
+    user.saveRecipe(oRecipe.get());
+    return convertToDtoCollection(user.getSavedRecipes());
+  }
+
+  public Collection<RecipeDto> unlikeRecipe(Long userId, Long recipeId) {
+    Optional<User> oUser = userRepository.findById(userId);
+    Optional<Recipe> oRecipe = recipeRepository.findById(recipeId);
+    if (!oUser.isPresent() || !oRecipe.isPresent()) {
+      return null;
+    }
+    User user = oUser.get();
+    user.unsaveRecipe(oRecipe.get());
+    return convertToDtoCollection(user.getSavedRecipes());
   }
 
   private Collection<RecipeDto> convertToDtoCollection(Collection<Recipe> recipes) {
