@@ -78,6 +78,11 @@ public class FoodStock {
     this.stockItems = stockItems;
   }
 
+  @JsonIgnore
+  public Long getFoodId() {
+    return this.food.getId();
+  }
+
   /**
    * Retrieves the quantity of stock items for the given foodstock
    */
