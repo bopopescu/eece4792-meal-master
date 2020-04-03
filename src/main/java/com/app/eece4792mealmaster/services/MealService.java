@@ -63,7 +63,7 @@ public class MealService {
         for (Map.Entry<Long, Double> entry : toConsume.entrySet()) {
             if (stocks.get(entry.getKey()).getTotalQuantity() <= entry.getValue()) {
                 // delete the stock entirely
-                foodStockRepository.deleteById(entry.getKey());
+                foodStockRepository.delete(stocks.get(entry.getKey()));
             } else {
                 // determine which stock items to delete
                 Double leftToConsume = entry.getValue();
