@@ -9,7 +9,9 @@ import com.app.eece4792mealmaster.repositories.RecipeRepository;
 import com.app.eece4792mealmaster.repositories.StockItemRepository;
 import com.app.eece4792mealmaster.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -33,7 +35,7 @@ public class MealService {
 
     public void consume(Long userId, MealDto mealData) {
         Optional<User> oUser = userRepository.findById(userId);
-        if (!oUser.isPresent()) return; // this should never happen
+        if (!oUser.isPresent()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         Map<Long, FoodStock> stocks = oUser.get().getFoodStocks().stream()
                 .collect(Collectors.toMap(
                         FoodStock::getFoodId,
