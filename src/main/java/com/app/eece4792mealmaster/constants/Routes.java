@@ -52,6 +52,11 @@ public final class Routes {
   public static final String FOOD = "/food";
   public static final String FOOD_API = API + FOOD;
 
+  // Meal Routes
+  public static final String MEAL = "/meal";
+  public static final String MEAL_API = API + MEAL;
+  public static final String CONSUME = "/consume";
+
   // Azure Route
   public static final String AZURE = API + "/azure";
 
