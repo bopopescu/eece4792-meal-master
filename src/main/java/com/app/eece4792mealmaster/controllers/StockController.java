@@ -12,6 +12,9 @@ import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.app.eece4792mealmaster.services.StockService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
@@ -71,25 +74,30 @@ public class StockController {
 	}
 
 	@PostMapping(AZURE)
-	public ApiResponse receiptStock(HttpSession session, @RequestBody String imgUrl) throws IOException {
+	public ApiResponse receiptStock(HttpSession session, @RequestBody String img_b64_str) throws IOException {
 		// Takes url in body, returns food id's in body as list ex: [21, 38, 2113, 321]
 		Long userId = Utils.getLoggedInUser(session);
-		System.out.println(imgUrl);
 		if (userId == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
-		if (imgUrl == null) {
-			imgUrl = "https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg";
+		if (img_b64_str == null) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		imgUrl = "https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg";
 
-		// https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg
+		File tempFile = File.createTempFile("imgb64-", ".txt");
+		tempFile.deleteOnExit();
+		FileWriter fileWriter = new FileWriter(tempFile);
+		fileWriter.write(img_b64_str);
+		fileWriter.flush();
+		fileWriter.close();
+
 		String text = new String();
 		if(System.getProperty("os.name").toLowerCase().contains("win"))
-			text = "eece4792-meal-master/src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path "+imgUrl;
-			// text = "src\\text-recognition\\dist\\parse-receipt\\parse-receipt.exe --image_path "+imgUrl;
-		else
-			text = "src/text-recognition/dist/parse-receipt_ub/parse-receipt_ub --image_path "+imgUrl;
+			text = "python eece4792-meal-master/src/text-recognition/parse-receipt.py --text_file "+tempFile;
+			
+		else 
+			text = "src/text-recognition/dist/parse-receipt_ub/parse-receipt_ub --text_file "+tempFile;
+
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
 
