@@ -4,6 +4,7 @@ import com.app.eece4792mealmaster.constants.Consts;
 import com.app.eece4792mealmaster.constants.Routes;
 import com.app.eece4792mealmaster.models.Recipe;
 import com.app.eece4792mealmaster.models.Tag;
+import com.app.eece4792mealmaster.models.User;
 import com.app.eece4792mealmaster.utils.Utils;
 import com.app.eece4792mealmaster.utils.Views;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -29,6 +30,7 @@ public class RecipeDto {
         creator = recipe.getCreator().getId();
         image = Utils.imageUrlBuilder(recipe.getId(), Routes.RECIPE);
         likes = recipe.getSavedByUsers().size();
+        savedByUsers = recipe.getSavedByUsers();
     }
 
     private Long id;
@@ -53,6 +55,8 @@ public class RecipeDto {
     private Set<Tag> tags = new HashSet<>();
 
     private Integer likes;
+
+    private Set<User> savedByUsers = new HashSet<>();
 
     @JsonView(Views.Detailed.class)
     private Boolean canBeMade;
@@ -166,5 +170,13 @@ public class RecipeDto {
 
     public void setLikes(Integer likes) {
         this.likes = likes;
+    }
+
+    public Set<User> getSavedByUsers() {
+        return savedByUsers;
+    }
+
+    public void setSavedByUsers(Set<User> savedByUsers) {
+        this.savedByUsers = savedByUsers;
     }
 }
