@@ -28,6 +28,7 @@ public final class Routes {
   public static final String LOGOUT = USER_API + "/logout";
   public static final String REGISTER = USER_API + "/register";
   public static final String PROFILE = USER_API + "/profile";
+  public static final String INSIGHTS = USER_API + "/insights";
 
   // Product Routes
   public static final String PRODUCT = "/product";
