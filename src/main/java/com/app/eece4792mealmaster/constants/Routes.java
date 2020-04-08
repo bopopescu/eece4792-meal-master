@@ -38,6 +38,7 @@ public final class Routes {
   public static final String RECIPE = "/recipe";
   public static final String RECIPE_API = API + RECIPE;
   public static final String LIKE = "/likes";
+  public static final String SHOPPING_LIST = RECIPE_API + "/shoppingList";
 
   // Query Params
   public static final String SEARCH = "/search";

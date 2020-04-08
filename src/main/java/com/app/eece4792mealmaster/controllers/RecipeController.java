@@ -1,7 +1,13 @@
 package com.app.eece4792mealmaster.controllers;
 
 import com.app.eece4792mealmaster.dto.RecipeDto;
+import com.app.eece4792mealmaster.dto.RecipeIngredientDto;
+import com.app.eece4792mealmaster.models.FoodStock;
+import com.app.eece4792mealmaster.models.GenericFood;
+import com.app.eece4792mealmaster.models.Recipe;
+import com.app.eece4792mealmaster.models.RecipeIngredient;
 import com.app.eece4792mealmaster.services.RecipeService;
+import com.app.eece4792mealmaster.services.StockService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 import com.app.eece4792mealmaster.utils.Utils;
 import com.app.eece4792mealmaster.utils.Views;
@@ -13,6 +19,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
 
+import java.text.ParseException;
+import java.util.*;
+
 import static com.app.eece4792mealmaster.constants.Routes.*;
 
 // TODO: Add EC2 hostname to allowed origins
@@ -21,6 +30,9 @@ import static com.app.eece4792mealmaster.constants.Routes.*;
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
+
+    @Autowired
+    private StockService stockService;
 
     @JsonView(Views.Summary.class)
     @GetMapping(RECIPE_API + SEARCH)
@@ -148,5 +160,39 @@ public class RecipeController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         return new ApiResponse(recipeService.unlikeRecipe(userId, recipeId));
+    }
+
+    //SHOPPING_LIST
+    @GetMapping(SHOPPING_LIST)
+    public ApiResponse getMissingItems(HttpSession session, @PathVariable(RECIPE_ID) Long recipeId) {
+        Long userId = Utils.getLoggedInUser(session);
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        Recipe recipe;
+        try{
+            recipe = recipeService.convertToEntity(recipeService.findById(recipeId));
+        } catch (ParseException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        // Put user's food stock into a set of generic foods
+        Collection<FoodStock> foodStocks = stockService.getStockByUser(userId);
+        Set<GenericFood> usersGenericFoods = new HashSet<GenericFood>();
+        for(FoodStock foodStock : foodStocks)
+            usersGenericFoods.add(foodStock.getFood());
+
+        // Get all the user's missing items needed for recipe
+        List<GenericFood> missingItems = new ArrayList<>();
+        for(RecipeIngredient ingredient : recipe.getRecipeIngredients())
+        {
+            // Check if user is missing ingredient in their food stock
+            if(!usersGenericFoods.contains(ingredient.getIngredient()))
+            {
+                missingItems.add(ingredient.getIngredient());
+            }
+        }
+
+        return new ApiResponse(missingItems);
     }
 }
