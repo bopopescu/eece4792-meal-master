@@ -64,6 +64,8 @@ public class RecipeService {
     recipeDto.setCreator(oUser.get().getId());
     Recipe recipe = convertToEntity(recipeDto);
     recipeRepository.save(recipe);
+
+    oUser.get().saveRecipe(recipe);
     return convertToDto(recipe);
   }
 
@@ -98,26 +100,30 @@ public class RecipeService {
     return oUser.map(user -> convertToDtoCollection(user.getSavedRecipes())).orElse(null);
   }
 
-  public Collection<RecipeDto> likeRecipe(Long userId, Long recipeId) {
+  public RecipeDto likeRecipe(Long userId, Long recipeId) {
     Optional<User> oUser = userRepository.findById(userId);
     Optional<Recipe> oRecipe = recipeRepository.findById(recipeId);
     if (!oUser.isPresent() || !oRecipe.isPresent()) {
       return null;
     }
     User user = oUser.get();
-    user.saveRecipe(oRecipe.get());
-    return convertToDtoCollection(user.getSavedRecipes());
+    Recipe recipe = oRecipe.get();
+
+    user.saveRecipe(recipe);
+    return convertToDto(recipe);
   }
 
-  public Collection<RecipeDto> unlikeRecipe(Long userId, Long recipeId) {
+  public RecipeDto unlikeRecipe(Long userId, Long recipeId) {
     Optional<User> oUser = userRepository.findById(userId);
     Optional<Recipe> oRecipe = recipeRepository.findById(recipeId);
     if (!oUser.isPresent() || !oRecipe.isPresent()) {
       return null;
     }
     User user = oUser.get();
-    user.unsaveRecipe(oRecipe.get());
-    return convertToDtoCollection(user.getSavedRecipes());
+    Recipe recipe = oRecipe.get();
+
+    user.unsaveRecipe(recipe);
+    return convertToDto(recipe);
   }
 
   private Collection<RecipeDto> convertToDtoCollection(Collection<Recipe> recipes) {
