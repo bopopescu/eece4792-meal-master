@@ -123,6 +123,26 @@ public class StockService {
     return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
   }
 
+  public int getNumOfExpiredStockItems(Long userId)
+  {
+    int numOfExpiredStockItems = 0;
+    Collection<FoodStock> foodStocks = getStockByUser(userId);
+    Date today = new Date();
+
+    // Iterate through every StockItem in every FoodStock
+    for(FoodStock foodStock : foodStocks)
+    {
+      for(StockItem stockItem : foodStock.getStockItems())
+      {
+        // True if expiration date has passed
+        if(stockItem.getExpirationDate().compareTo(today) < 0)
+          numOfExpiredStockItems++;
+      }
+    }
+
+    return numOfExpiredStockItems;
+  }
+
   private FoodStock createBlankFoodStock(Long foodId) {
     Optional<GenericFood> oGenericFood = genericFoodRepository.findById(foodId);
     GenericFood genericFood = oGenericFood.orElse(null);
