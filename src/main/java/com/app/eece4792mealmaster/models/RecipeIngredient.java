@@ -1,13 +1,11 @@
 package com.app.eece4792mealmaster.models;
 
-import com.app.eece4792mealmaster.dto.RecipeIngredientId;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -25,7 +23,7 @@ public class RecipeIngredient {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("genericFoodId")
+    @MapsId("ingredientId")
     private GenericFood ingredient;
 
     @Column(name = "servings")
