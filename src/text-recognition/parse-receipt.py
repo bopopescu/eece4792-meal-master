@@ -9,6 +9,14 @@ import re
 from process import from_azure
 import mysql.connector
 
+import base64
+
+def get_as_base64():
+    url = r'https://github.com/Team-W4/eece4792-meal-master/blob/master/src/text-recognition/receipt-pics/tj1.jpg?raw=true'
+    b64 = base64.b64encode(requests.get(url).content)
+    return b64
+
+
 RECEIPT_NON_FOODS = ["CRV", "BAG FEE", "CREW MEMBER DISCOUNT", "GROCERY NON TAXABLE", "CANVAS BAG"]
 
 def get_azure_settings():
@@ -68,6 +76,20 @@ def request_from_url(url):
     response.raise_for_status()
     return process_image_response(headers, response)
 
+def request_from_b64(stream):
+    # Get Azure settings
+    key = get_azure_settings()['key']
+    endpoint = os.path.join(get_azure_settings()['endpoint'], get_azure_settings()['text recognition'])
+
+    # Setup API request
+    headers = {'Ocp-Apim-Subscription-Key': key, 'Content-Type': 'application/octet-stream'}
+    data = stream
+
+    # Make request
+    response = requests.post(endpoint, headers=headers,  data=data)
+    response.raise_for_status()
+    return process_image_response(headers, response)
+
 def parse_foods(recognition_results):
     lines = []
 
@@ -119,11 +141,15 @@ def parse_trader_joes(lines):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parses the provided image")
-    parser.add_argument('--image_path', help="Path to image of receipt", required=True)
-    parser.add_argument('--use_url', help="Use flag to get image from url instead of local path", required=False, action='store_true')
+    parser.add_argument('--base64_file', help="Path to image of receipt", required=True)
     args = parser.parse_args()
 
-    path = args.image_path
-    use_url = args.use_url
-    from_azure(parse_foods(request_from_url(path)))
-
+    # Needs renaming
+    base64_string = open(args.base64_file, 'r').read()
+    if(base64_string[0:2] == "b'" ):
+        base64_string = base64_string[2:]
+    try:
+        from_azure(parse_foods(request_from_b64(base64.b64decode(base64_string))))
+    except:
+        print(['no matches'])
+ 

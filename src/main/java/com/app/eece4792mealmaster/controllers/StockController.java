@@ -13,6 +13,9 @@ import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.app.eece4792mealmaster.services.StockService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -73,23 +76,33 @@ public class StockController {
 	}
 
 	@PostMapping(AZURE)
+
 	public ApiResponse receiptStock(HttpSession session, @RequestBody String imgUrl) throws IOException {
 		Long userId = Utils.getLoggedInUser(session);
 
 		if (userId == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
-		if (imgUrl == null) {
-			imgUrl = "https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg";
+		if (img_b64_str == null) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		imgUrl = "https://raw.githubusercontent.com/Team-W4/eece4792-meal-master/text-recognition/src/text-recognition/receipt-pics/tj1.jpg";
+
+		File tempFile = File.createTempFile("imgb64-", ".txt");
+		tempFile.deleteOnExit();
+		FileWriter fileWriter = new FileWriter(tempFile);
+		fileWriter.write(img_b64_str);
+		// fileWriter.flush();
+		fileWriter.close();
 
 		String text = new String();
-		if(System.getProperty("os.name").toLowerCase().contains("win")) {
-			text = "eece4792-meal-master/src/text-recognition/dist/parse-receipt/parse-receipt.exe --image_path " + imgUrl;
-		} else {
-			text = "parse-receipt_ub/parse-receipt_ub --image_path " + imgUrl;
-		}
+		if(System.getProperty("os.name").toLowerCase().contains("win"))
+			text = "python eece4792-meal-master/src/text-recognition/parse-receipt.py --text_file "+tempFile;
+			
+		else 
+			text = "parse_receipt_ub/parse_receipt_ub --text_file "+tempFile;
+
+		final String dir = System.getProperty("user.dir");
+        System.out.println("current dir = " + dir);
 
 		Process p = Runtime.getRuntime().exec(text);
 
