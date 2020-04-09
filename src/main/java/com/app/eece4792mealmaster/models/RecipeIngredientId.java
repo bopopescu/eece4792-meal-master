@@ -1,4 +1,4 @@
-package com.app.eece4792mealmaster.dto;
+package com.app.eece4792mealmaster.models;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -10,7 +10,7 @@ public class RecipeIngredientId implements Serializable {
     @Column(name = "recipe_id")
     private Long recipeId;
 
-    @Column(name = "generic_food_id")
+    @Column(name = "ingredient_id")
     private Long genericFoodId;
 
     public RecipeIngredientId() {}
