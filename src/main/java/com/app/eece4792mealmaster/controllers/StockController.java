@@ -2,11 +2,12 @@ package com.app.eece4792mealmaster.controllers;
 
 import static com.app.eece4792mealmaster.constants.Routes.*;
 
-import com.app.eece4792mealmaster.models.FoodStock;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 
+import com.app.eece4792mealmaster.models.FoodStock;
+import com.app.eece4792mealmaster.models.GenericFood;
 import com.app.eece4792mealmaster.models.StockItem;
 import com.app.eece4792mealmaster.services.GenericFoodService;
 import com.app.eece4792mealmaster.services.StockService;
@@ -15,6 +16,7 @@ import com.app.eece4792mealmaster.utils.ApiResponse;
 import java.io.File;
 import java.io.FileWriter;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
@@ -74,9 +76,10 @@ public class StockController {
 	}
 
 	@PostMapping(AZURE)
-	public ApiResponse receiptStock(HttpSession session, @RequestBody String img_b64_str) throws IOException {
-		// Takes url in body, returns food id's in body as list ex: [21, 38, 2113, 321]
+
+	public ApiResponse receiptStock(HttpSession session, @RequestBody String imgUrl) throws IOException {
 		Long userId = Utils.getLoggedInUser(session);
+
 		if (userId == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
@@ -100,6 +103,7 @@ public class StockController {
 
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
+
 		Process p = Runtime.getRuntime().exec(text);
 
 		// =======================================================================================================================
@@ -123,28 +127,32 @@ public class StockController {
 		// 	System.out.println(s);
 		// }
 		// =======================================================================================================================
+
 		BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		String pyString = null; 
 		String id_list = new String();
 		while ((pyString = input.readLine()) != null) {
-			// print the line.
-			System.out.println("pyString = "+pyString);
 			id_list = pyString;
 		}
-		System.out.println(pyString);
-		// =======================================================================================================================
+
 		String[] items = id_list.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 
-		int[] results = new int[items.length];
-		
+		long[] results = new long[items.length];		
 		for (int i = 0; i < items.length; i++) {
 			try {
-				results[i] = Integer.parseInt(items[i]);
+				results[i] = Long.parseLong(items[i]);
 			} catch (NumberFormatException nfe) {
 			};
 		}
 
-		return new ApiResponse(results);
+		Set<GenericFood> scannedFoods = new HashSet<>();
+		for (int j = 0; j < results.length; j++) {
+			System.out.println(results[j]);
+			GenericFood scannedFood = genericFoodService.getGenericFoodById(results[j]);
+			scannedFoods.add(scannedFood);
+		}
+
+		return new ApiResponse(scannedFoods);
 	}
 
 	@PostMapping(STOCK_ITEM_API + FOOD + VAR_FOOD_ID)

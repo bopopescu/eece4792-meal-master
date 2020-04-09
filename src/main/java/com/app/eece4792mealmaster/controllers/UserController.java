@@ -1,7 +1,10 @@
 package com.app.eece4792mealmaster.controllers;
 
 import com.app.eece4792mealmaster.constants.Consts;
+import com.app.eece4792mealmaster.models.FoodStock;
 import com.app.eece4792mealmaster.models.User;
+import com.app.eece4792mealmaster.services.RecipeService;
+import com.app.eece4792mealmaster.services.StockService;
 import com.app.eece4792mealmaster.services.UserService;
 import com.app.eece4792mealmaster.utils.ApiResponse;
 
@@ -15,6 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
 
+import java.util.Collection;
+import java.util.Date;
+
 import static com.app.eece4792mealmaster.constants.Routes.*;
 
 // TODO: Add EC2 hostname to allowed origins
@@ -24,6 +30,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private StockService stockService;
+
+    @Autowired
+    private RecipeService recipeService;
 
     @GetMapping(USER_API + VAR_USER_ID)
     @JsonView(Views.Detailed.class)
@@ -114,4 +126,60 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping(INSIGHTS)
+    public ApiResponse getUserInsights(HttpSession session)
+    {
+        Long userId = Utils.getLoggedInUser(session);
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        UserInsight userInsight = new UserInsight(userId);
+        return new ApiResponse(userInsight);
+    }
+
+    public class UserInsight {
+
+        public UserInsight(){}
+
+        public UserInsight(Long userId)
+        {
+            numExpiredStockItems = stockService.getNumOfExpiredStockItems(userId);
+            numStocks = stockService.getStockByUser(userId).size();
+            numRecipes = recipeService.getUserLikedRecipes(userId).size();
+        }
+
+        private int numExpiredStockItems;
+
+        private int numStocks;
+
+        private int numRecipes;
+
+        public int getNumExpiredStockItems() {
+            return numExpiredStockItems;
+        }
+
+        public void setNumExpiredStockItems(int numExpiredStockItems) {
+            this.numExpiredStockItems = numExpiredStockItems;
+        }
+
+        public int getNumStocks() {
+            return numStocks;
+        }
+
+        public void setNumStocks(int numStocks) {
+            this.numStocks = numStocks;
+        }
+
+        public int getNumRecipes() {
+            return numRecipes;
+        }
+
+        public void setNumRecipes(int numRecipes) {
+            this.numRecipes = numRecipes;
+        }
+    }
 }
+
+

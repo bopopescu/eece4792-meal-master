@@ -11,7 +11,6 @@ import com.app.eece4792mealmaster.repositories.UserRepository;
 import com.app.eece4792mealmaster.utils.Utils;
 
 import java.util.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -122,6 +121,26 @@ public class StockService {
 
   public Collection<FoodStock> getFoodStockByName(String foodStockName) {
     return foodStockName.equals("") ? new ArrayList<>() : foodStockRepository.searchFoodStock(foodStockName);
+  }
+
+  public int getNumOfExpiredStockItems(Long userId)
+  {
+    int numOfExpiredStockItems = 0;
+    Collection<FoodStock> foodStocks = getStockByUser(userId);
+    Date today = new Date();
+
+    // Iterate through every StockItem in every FoodStock
+    for(FoodStock foodStock : foodStocks)
+    {
+      for(StockItem stockItem : foodStock.getStockItems())
+      {
+        // True if expiration date has passed
+        if(stockItem.getExpirationDate().compareTo(today) < 0)
+          numOfExpiredStockItems++;
+      }
+    }
+
+    return numOfExpiredStockItems;
   }
 
   private FoodStock createBlankFoodStock(Long foodId) {

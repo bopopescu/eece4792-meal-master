@@ -28,6 +28,7 @@ public final class Routes {
   public static final String LOGOUT = USER_API + "/logout";
   public static final String REGISTER = USER_API + "/register";
   public static final String PROFILE = USER_API + "/profile";
+  public static final String INSIGHTS = USER_API + "/insights";
 
   // Product Routes
   public static final String PRODUCT = "/product";
@@ -36,6 +37,7 @@ public final class Routes {
   // Recipe Routes
   public static final String RECIPE = "/recipe";
   public static final String RECIPE_API = API + RECIPE;
+  public static final String LIKE = "/likes";
 
   // Query Params
   public static final String SEARCH = "/search";
@@ -50,6 +52,11 @@ public final class Routes {
   // Generic Food Routes
   public static final String FOOD = "/food";
   public static final String FOOD_API = API + FOOD;
+
+  // Meal Routes
+  public static final String MEAL = "/meal";
+  public static final String MEAL_API = API + MEAL;
+  public static final String CONSUME = "/consume";
 
   // Azure Route
   public static final String AZURE = API + "/azure";

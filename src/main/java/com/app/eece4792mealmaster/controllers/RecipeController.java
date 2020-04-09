@@ -119,4 +119,34 @@ public class RecipeController {
         recipeService.deleteRecipe(recipeId);
         return new ApiResponse(String.format("Recipe %d deleted", recipeId));
     }
+
+    @JsonView(Views.Summary.class)
+    @GetMapping(RECIPE_API + LIKE)
+    public ApiResponse getLikedRecipes(HttpSession session) {
+        Long userId = Utils.getLoggedInUser(session);
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        return new ApiResponse(recipeService.getUserLikedRecipes(userId));
+    }
+
+    @JsonView(Views.Summary.class)
+    @PostMapping(RECIPE_API + LIKE + VAR_RECIPE_ID)
+    public ApiResponse likeRecipe(HttpSession session, @PathVariable(RECIPE_ID) Long recipeId) {
+        Long userId = Utils.getLoggedInUser(session);
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        return new ApiResponse(recipeService.likeRecipe(userId, recipeId));
+    }
+
+    @JsonView(Views.Summary.class)
+    @DeleteMapping(RECIPE_API + LIKE + VAR_RECIPE_ID)
+    public ApiResponse unlikeRecipe(HttpSession session, @PathVariable(RECIPE_ID) Long recipeId) {
+        Long userId = Utils.getLoggedInUser(session);
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        return new ApiResponse(recipeService.unlikeRecipe(userId, recipeId));
+    }
 }

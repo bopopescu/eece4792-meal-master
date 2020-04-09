@@ -7,15 +7,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "food_stock")
@@ -29,7 +21,7 @@ public class FoodStock {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @OneToMany(mappedBy = "foodStock")
+  @OneToMany(mappedBy = "foodStock", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private Set<StockItem> stockItems = new HashSet<>();
 
   @ManyToOne
@@ -76,6 +68,11 @@ public class FoodStock {
 
   public void setStockItems(Set<StockItem> stockItems) {
     this.stockItems = stockItems;
+  }
+
+  @JsonIgnore
+  public Long getFoodId() {
+    return this.food.getId();
   }
 
   /**
