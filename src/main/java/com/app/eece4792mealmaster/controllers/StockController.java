@@ -88,7 +88,7 @@ public class StockController {
 		tempFile.deleteOnExit();
 		FileWriter fileWriter = new FileWriter(tempFile);
 		fileWriter.write(img_b64_str);
-		fileWriter.flush();
+		// fileWriter.flush();
 		fileWriter.close();
 
 		String text = new String();
@@ -96,11 +96,10 @@ public class StockController {
 			text = "python eece4792-meal-master/src/text-recognition/parse-receipt.py --text_file "+tempFile;
 			
 		else 
-			text = "src/text-recognition/dist/parse-receipt_ub/parse-receipt_ub --text_file "+tempFile;
+			text = "parse_receipt_ub/parse_receipt_ub --text_file "+tempFile;
 
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
-
 		Process p = Runtime.getRuntime().exec(text);
 
 		// =======================================================================================================================
