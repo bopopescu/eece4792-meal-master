@@ -77,7 +77,7 @@ public class StockController {
 
 	@PostMapping(AZURE)
 
-	public ApiResponse receiptStock(HttpSession session, @RequestBody String imgUrl) throws IOException {
+	public ApiResponse receiptStock(HttpSession session, @RequestBody String img_b64_str) throws IOException {
 		Long userId = Utils.getLoggedInUser(session);
 
 		if (userId == null) {
