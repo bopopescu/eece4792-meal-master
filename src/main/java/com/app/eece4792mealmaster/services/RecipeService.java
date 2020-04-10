@@ -92,7 +92,16 @@ public class RecipeService {
   }
 
   public Collection<RecipeDto> getRecipeRecs(Long userId) {
-    return convertToDtoCollection(recipeRepository.findRecipeRecs(userId, PageRequest.of(0, 6)));
+    Collection<Recipe> recipeRecommendations = recipeRepository.findRecipeRecs(userId, PageRequest.of(0, 6));
+
+    if (recipeRecommendations.size() == 0) {
+      // Dedicated recipes for when no recommendations are given (42-46)
+      for (long i = 42; i <= 46; i++) {
+        recipeRecommendations.add(recipeRepository.findById(i).orElse(null));
+      }
+    }
+
+    return convertToDtoCollection(recipeRecommendations);
   }
 
   public Collection<RecipeDto> getUserLikedRecipes(Long userId) {

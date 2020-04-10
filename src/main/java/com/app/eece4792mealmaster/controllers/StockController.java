@@ -104,6 +104,8 @@ public class StockController {
 		final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
 
+		System.out.println(text);
+
 		Process p = Runtime.getRuntime().exec(text);
 
 		// =======================================================================================================================
