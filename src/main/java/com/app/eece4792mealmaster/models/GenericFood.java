@@ -19,9 +19,14 @@ public class GenericFood {
 
   private String name;
 
-  private Integer averageExpirationDurations;
-
-  private Double gramsPerServing;
+  private Integer daysGood;
+  private String storedIn;
+  private Integer calories;
+  private String carbs;
+  private String protein;
+  private String totalFat;
+  private Double servingSize;
+  private String servingSizeUnit;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
@@ -64,12 +69,13 @@ public class GenericFood {
     this.name = name;
   }
 
+  // Outdated remove
   public Integer getAverageExpirationDurations() {
-    return averageExpirationDurations;
+    return daysGood;
   }
-
-  public void setAverageExpirationDurations(Integer averageExpirationDurations) {
-    this.averageExpirationDurations = averageExpirationDurations;
+  // Outdated remove
+  public void setAverageExpirationDurations(Integer daysGood) {
+    this.daysGood = daysGood;
   }
 
   public Set<Tag> getTags() {
@@ -79,13 +85,13 @@ public class GenericFood {
   public void setTags(Set<Tag> tags) {
     this.tags = tags;
   }
-
+  // Outdated remove
   public Double getGramsPerServing() {
-    return gramsPerServing;
+    return servingSize;
   }
-
-  public void setGramsPerServing(Double gramsPerServing) {
-    this.gramsPerServing = gramsPerServing;
+  // Outdated remove
+  public void setGramsPerServing(Double servingSize) {
+    this.servingSize = servingSize;
   }
 
   public Set<Product> getMembers() {
@@ -95,6 +101,71 @@ public class GenericFood {
   public void setMembers(Set<Product> members) {
     this.members = members;
   }
+  
+  public Integer getDaysGood() {
+    return daysGood;
+  }
+
+  public void setDaysGood(Integer daysGood) {
+    this.daysGood = daysGood;
+  }
+
+  public String getStoredIn() {
+    return storedIn;
+  }
+
+  public void setStoredIn(String storedIn) {
+    this.storedIn = storedIn;
+  }
+  
+  public Integer getCalories() {
+    return calories;
+  }
+
+  public void setCalories(Integer calories) {
+    this.calories = calories;
+  }
+
+  public String getCarbs() {
+    return carbs;
+  }
+
+  public void setCarbs(String carbs) {
+    this.carbs = carbs;
+  }
+
+  public String getProtein() {
+    return protein;
+  }
+
+  public void setProtein(String protein) {
+    this.protein = protein;
+  }
+
+  public String getTotalFat() {
+    return totalFat;
+  }
+
+  public void setTotalFat(String totalFat) {
+    this.totalFat = totalFat;
+  }
+
+  public Double getServingSize() {
+    return servingSize;
+  }
+
+  public void setServingSize(Double servingSize) {
+    this.servingSize = servingSize;
+  }
+ 
+  public String getServingSizeUnit() {
+    return servingSizeUnit;
+  }
+
+  public void setServingSizeUnit(String servingSizeUnit) {
+    this.servingSizeUnit = servingSizeUnit;
+  }
+
 //
 //  public void setFoodGroups(Set<FoodGroup> foodGroups) {
 //    this.foodGroups = foodGroups;
