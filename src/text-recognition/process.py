@@ -8,9 +8,9 @@ mydb = mysql.connector.connect(
 	host="database-2.cmnixox8v3fi.us-east-1.rds.amazonaws.com",
 	user="teamw4",
 	passwd="wordPass123!",
-	database="mealmaster")
+	database="mealmain")
 mycursor = mydb.cursor()
-sql = "SELECT name FROM mealmaster.generic_foods"
+sql = "SELECT name FROM mealmain.generic_foods"
 
 try:
 	mycursor.execute(sql)
@@ -28,7 +28,7 @@ mydb.close()
 def foods_dict():
 	mydb.connect()
 	cur = mydb.cursor()
-	sql = "SELECT name, id FROM mealmaster.generic_foods"
+	sql = "SELECT name, id FROM mealmain.generic_foods"
 	try:
 		cur.execute(sql)
 		rows = cur.fetchall()
